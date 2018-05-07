@@ -12,7 +12,7 @@ public class DaoUsuarioGestor : DbAccess, IDaoEntity
     {
         QuerySql = "SELECT * FROM @TableName WHERE ID = @Id";
         AddNewParameter("Id", id);
-        AddNewParameter("TableName", TableName);
+        
 
         DbConnection = ExecuteDataReader();
         if (!DrData.IsClosed)
@@ -29,7 +29,7 @@ public class DaoUsuarioGestor : DbAccess, IDaoEntity
     public IEnumerable<IModel> GetList()
     { 
         QuerySql = "SELECT * FROM @TableName ORDER BY ID";
-        AddNewParameter("TableName", TableName);
+        
 
         DbConnection = ExecuteDataReader();
         if (!DrData.IsClosed)
@@ -63,7 +63,7 @@ public class DaoUsuarioGestor : DbAccess, IDaoEntity
     {
         QuerySql = "DELETE FROM @TableName WHERE ID = @Id";
         AddNewParameter("Id", id);
-        AddNewParameter("TableName", TableName);
+        
 
         return ExecuteNonQuery();
     }
@@ -73,7 +73,7 @@ public class DaoUsuarioGestor : DbAccess, IDaoEntity
         AddNewParameter("NombreArea", nombre);
         AddNewParameter("Descripción", texto2);
         AddNewParameter("Responsable", texto3);
-        AddNewParameter("TableName", TableName);
+        
 
         return ExecuteNonQuery();
     }
@@ -82,7 +82,7 @@ public class DaoUsuarioGestor : DbAccess, IDaoEntity
         QuerySql = "UPDATE @TableName SET Nombre = @NombreArea WHERE ID = @Id";
         AddNewParameter("Id", id);
         AddNewParameter("NombreArea", nombre);
-        AddNewParameter("TableName", TableName);
+        
 
         return ExecuteNonQuery();
     }

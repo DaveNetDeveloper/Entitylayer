@@ -5,13 +5,13 @@ public class DaoArea : DbAccess, IDaoEntity
 { 
     public DaoArea()
     {
+        TableName = Constants.TableNameAREA;
     }
 
     public IModel GetById(int id)
-    {
-        QuerySql = String.Format("SELECT * FROM AREA WHERE ID = @Id");
-        AddNewParameter("Id", id);
-        DbConnection = ExecuteDataReader();
+    { 
+        AddNewParameter("Id", id); 
+        DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
         if (!DrData.IsClosed)
         {
             while (DrData.Read())
@@ -24,9 +24,8 @@ public class DaoArea : DbAccess, IDaoEntity
         return Model;
     }
     public IEnumerable<IModel> GetList()
-    { 
-        QuerySql = " SELECT * FROM AREA ORDER BY ID ";
-        DbConnection = ExecuteDataReader();
+    {  
+        DbConnection = ExecuteDataReader(QueryTypes.SelectAll);
          
         if (!DrData.IsClosed)
         {
@@ -42,23 +41,29 @@ public class DaoArea : DbAccess, IDaoEntity
     }
     public bool RemoveById(int id)
     {
-        QuerySql = String.Format("DELETE FROM AREA WHERE ID = @Id");
+        QuerySql = String.Format("DELETE FROM @TableName WHERE ID = @Id");
         AddNewParameter("Id", id);
+        
+
         return ExecuteNonQuery();
     }
     public bool Insert(string nombre, string descripcion, string responsable)
     {
-        QuerySql = String.Format("INSERT INTO AREA (Nombre, Descripción, Responsable) VALUES( @NombreArea, @Descripción, @Responsable)");
+        QuerySql = String.Format("INSERT INTO @TableName (Nombre, Descripción, Responsable) VALUES( @NombreArea, @Descripción, @Responsable)");
         AddNewParameter("NombreArea", nombre);
         AddNewParameter("Descripción", descripcion);
         AddNewParameter("Responsable", responsable);
+        
+
         return ExecuteNonQuery();
     }
     public bool UpdateById(int id, string nombre)
     {
-        QuerySql = String.Format("UPDATE AREA SET Nombre = @NombreArea WHERE ID = @Id");
+        QuerySql = String.Format("UPDATE @TableName SET Nombre = @NombreArea WHERE ID = @Id");
         AddNewParameter("Id", id);
         AddNewParameter("NombreArea", nombre);
+        
+
         return ExecuteNonQuery();
     }
 }

@@ -25,10 +25,10 @@
                 entity = new EntityTest();
                 break;
             case Enums.EntityType.UsuarioAlumno:
-                entity = new EntityUsuarioAlumno();
+                //entity = new EntityUsuarioAlumno();
                 break;
             case Enums.EntityType.UsuarioGestor:
-                entity = new EntityUsuarioGestor();
+                //entity = new EntityUsuarioGestor();
                 break;
             //case Enums.EntityType.Contacto:
             //    entity = new EntityContacto();

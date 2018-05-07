@@ -14,6 +14,6 @@ public interface IDbAccess
     List<MySqlParameter> MySqlParametersList { get; set; }
 
     void AddNewParameter(string nombreParam, object Value);
-    MySqlConnection ExecuteDataReader();
-    bool ExecuteNonQuery();
+    MySqlConnection ExecuteDataReader(DbAccess.QueryTypes pQueryType); 
+    bool ExecuteNonQuery(DbAccess.QueryTypes pQueryType);
 }

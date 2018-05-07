@@ -5,12 +5,13 @@ public class DaoTest : DbAccess, IDaoEntity
 {
     public DaoTest()
     {
+        TableName = "TEST";
     }
     public IModel GetById(int id)
     {
-        IModel test = null;
-        QuerySql = String.Format("SELECT * FROM TEST WHERE ID = {0} ", id);
-        DbConnection = ExecuteDataReader();
+        IModel test = null; 
+        AddNewParameter("id", id);
+        DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
         if (!DrData.IsClosed)
         {
             while (DrData.Read())
@@ -25,9 +26,8 @@ public class DaoTest : DbAccess, IDaoEntity
     public IEnumerable<IModel> GetList()
     { 
         List<IModel> testsList = null;
-
-        QuerySql = " SELECT * FROM TEST ORDER BY ID ";
-        DbConnection = ExecuteDataReader();
+        QueryType = QueryTypes.SelectAll;
+        DbConnection = ExecuteDataReader(QueryTypes.SelectAll);
          
         if (!DrData.IsClosed)
         {
@@ -43,17 +43,20 @@ public class DaoTest : DbAccess, IDaoEntity
     }
     public bool RemoveById(int id)
     {
-        QuerySql = String.Format("DELETE FROM TEST WHERE ID = {0}", id);
+        QueryType = QueryTypes.DeleteByPrimary;
+        AddNewParameter("id", id);
         return ExecuteNonQuery();
     }
     public bool Insert(string nombre, string texto2, string texto3)
     {
-        QuerySql = String.Format("INSERT INTO TEST (Nombre, Descripción, Responsable) VALUES('{0}', '{1}', '{2}')", nombre, texto2, texto3);
+        QuerySql = String.Format("INSERT INTO @TableName (Nombre, Descripción, Responsable) VALUES('{0}', '{1}', '{2}')", nombre, texto2, texto3);
+        
         return ExecuteNonQuery();
     }
     public bool UpdateById(int id, string nombre)
     {
-        QuerySql = String.Format("UPDATE TEST SET Nombre = '{0}' WHERE ID = {1}", nombre, id);
+        QuerySql = String.Format("UPDATE @TableName SET Nombre = '{0}' WHERE ID = {1}", nombre, id);
+        
         return ExecuteNonQuery();
     }
 }

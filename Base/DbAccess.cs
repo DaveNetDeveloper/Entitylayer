@@ -1,12 +1,22 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
+using System.Collections.Generic; 
 
 public class DbAccess : IDbAccess
 {
-    #region [public properties]
+    public enum QueryTypes
+    {
+        SelectAll,
+        SelectByPrimary,
+        UpdateByPrimary,
+        DeleteByPrimary,
+        Create,
+        Custom
+    };
 
+    #region [public properties]
+    
+    public QueryTypes QueryType { get; set; }
     public string TableName { get; set; }
     public IModel Model { get; set; }
     public List<IModel> ModelList { get; set; }
@@ -19,15 +29,27 @@ public class DbAccess : IDbAccess
 
     #region [public methods]
 
-    public MySqlConnection ExecuteDataReader()
+    public MySqlConnection ExecuteDataReader(QueryTypes pQueryType)
     {
+        QueryType = pQueryType;
         InitializeConnection(); 
         DrData = Command.ExecuteReader();
         return (DrData != null) ? DbConnection : null;
+    } 
+
+    public bool ExecuteNonQuery(QueryTypes pQueryType)
+    {
+        QueryType = pQueryType;
+        InitializeConnection(); 
+        int affectedRecords = Command.ExecuteNonQuery();
+        DbConnection.Close();
+        MySqlParametersList.Clear();
+        return affectedRecords > 0; ;
     }
+
     public bool ExecuteNonQuery()
     {
-        InitializeConnection(); 
+        InitializeConnection();
         int affectedRecords = Command.ExecuteNonQuery();
         DbConnection.Close();
         MySqlParametersList.Clear();
@@ -78,10 +100,37 @@ public class DbAccess : IDbAccess
     private void InitializeConnection()
     {
         DbConnection = new MySqlConnection(Connection_biointranet);
-        Command = new MySqlCommand { Connection = DbConnection };
+        Command = new MySqlCommand { Connection = DbConnection }; 
+        Command.CommandText = GetSqQueryByQueryType().Replace("@TableName", TableName); 
         AddParametersToCommand();
-        Command.CommandText = QuerySql;
+       
         DbConnection.Open();
+    }
+
+    private string GetSqQueryByQueryType()
+    {
+        switch (QueryType)
+        {
+            case QueryTypes.SelectAll:
+                QuerySql = " SELECT * FROM @TableName ";
+                break;
+            case QueryTypes.SelectByPrimary:
+                QuerySql = " SELECT * FROM @TableName WHERE ID = @id ";
+                break;
+            case QueryTypes.UpdateByPrimary:
+
+                break;
+            case QueryTypes.DeleteByPrimary:
+                QuerySql = " DELETE FROM @TableName WHERE ID = @id ";
+                break;
+            case QueryTypes.Create:
+
+                break;
+            case QueryTypes.Custom:
+
+                break; 
+        }
+        return QuerySql;
     }
 
     #endregion

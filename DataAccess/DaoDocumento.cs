@@ -5,12 +5,13 @@ public class DaoDocumento : DbAccess, IDaoEntity
 {
     public DaoDocumento()
     {
+        TableName = "DOCUMENTO";
     }
     public IModel GetById(int id)
     {
         IModel documento = null;
-        QuerySql = String.Format("SELECT * FROM DOCUMENTO WHERE ID = {0} ", id);
-        DbConnection = ExecuteDataReader();
+        AddNewParameter("id", id);
+        DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
         if (!DrData.IsClosed)
         {
             while (DrData.Read())
@@ -23,10 +24,8 @@ public class DaoDocumento : DbAccess, IDaoEntity
     }
     public IEnumerable<IModel> GetList()
     { 
-        List<IModel> documentosList = null;
-
-        QuerySql = " SELECT * FROM DOCUMENTO ORDER BY ID ";
-        DbConnection = ExecuteDataReader();
+        List<IModel> documentosList = null; 
+        DbConnection = ExecuteDataReader(QueryTypes.SelectAll);
          
         if (!DrData.IsClosed)
         {
@@ -41,18 +40,20 @@ public class DaoDocumento : DbAccess, IDaoEntity
         return documentosList; 
     }
     public bool RemoveById(int id)
-    {
-        QuerySql = String.Format("DELETE FROM DOCUMENTO WHERE ID = {0}", id);
-        return ExecuteNonQuery();
+    { 
+        AddNewParameter("id", id);
+        return ExecuteNonQuery(QueryTypes.DeleteByPrimary);
     }
     public bool Insert(string nombre, string texto2, string texto3)
     {
-        QuerySql = String.Format("INSERT INTO DOCUMENTO (Nombre, Descripción, Responsable) VALUES('{0}', '{1}', '{2}')", nombre, texto2, texto3);
+        QuerySql = String.Format("INSERT INTO @TableName (Nombre, Descripción, Responsable) VALUES('{0}', '{1}', '{2}')", nombre, texto2, texto3);
+        
         return ExecuteNonQuery();
     }
     public bool UpdateById(int id, string nombre)
     {
-        QuerySql = String.Format("UPDATE DOCUMENTO SET Nombre = '{0}' WHERE ID = {1}", nombre, id);
+        QuerySql = String.Format("UPDATE @TableName SET Nombre = '{0}' WHERE ID = {1}", nombre, id);
+        
         return ExecuteNonQuery();
     }
 }

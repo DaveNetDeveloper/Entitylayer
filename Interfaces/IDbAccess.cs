@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public interface IDbAccess
 {
     string TableName { get; set; }
+    //object PrimaryKeyValue { get; set; }
+    string PrimaryKeyName { get; set; }
 
     IModel Model { get; set; }
     List<IModel> ModelList { get; set; }

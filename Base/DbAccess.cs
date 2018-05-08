@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class DbAccess : IDbAccess
 {
+    #region [public enums]
+
     public enum QueryTypes
     {
         SelectAll,
@@ -14,10 +16,14 @@ public class DbAccess : IDbAccess
         Custom
     };
 
+    #endregion
+
     #region [public properties]
-    
+
     public QueryTypes QueryType { get; set; }
     public string TableName { get; set; }
+    //public object PrimaryKeyValue { get; set; }
+    public string PrimaryKeyName { get; set; }
     public IModel Model { get; set; }
     public List<IModel> ModelList { get; set; }
     public String QuerySql { get; set; }
@@ -36,7 +42,6 @@ public class DbAccess : IDbAccess
         DrData = Command.ExecuteReader();
         return (DrData != null) ? DbConnection : null;
     } 
-
     public bool ExecuteNonQuery(QueryTypes pQueryType)
     {
         QueryType = pQueryType;
@@ -46,7 +51,6 @@ public class DbAccess : IDbAccess
         MySqlParametersList.Clear();
         return affectedRecords > 0; ;
     }
-
     public bool ExecuteNonQuery()
     {
         InitializeConnection();
@@ -96,7 +100,6 @@ public class DbAccess : IDbAccess
                 Command.Parameters.Add(parameterItem);
             }
     }
-
     private void InitializeConnection()
     {
         DbConnection = new MySqlConnection(Connection_biointranet);
@@ -106,7 +109,6 @@ public class DbAccess : IDbAccess
        
         DbConnection.Open();
     }
-
     private string GetSqQueryByQueryType()
     {
         switch (QueryType)

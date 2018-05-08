@@ -8,24 +8,24 @@ public class EntityDocumento : IEntity
     {
         _daoDocumentos = new DaoDocumento();
     }
-    public IModel GetById(int id)
+    public IModel GetById(int pKValue)
     {   
-        return _daoDocumentos.GetById(id); 
+        return _daoDocumentos.GetById(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
         return _daoDocumentos.GetList();
     }
-    public bool RemoveById(int id)
+    public bool RemoveById(int pKValue)
     {
-        return _daoDocumentos.RemoveById(id);
+        return _daoDocumentos.RemoveById(pKValue);
     }
     public bool Insert(string nombre)
     {
         return _daoDocumentos.Insert(nombre, "Descripción del documento", "xxxx@biosystems.es");
     }
-    public bool UpdateById(int id, string nombre)
+    public bool UpdateById(int pKValue, string nombre)
     {
-        return _daoDocumentos.UpdateById(id, nombre);
+        return _daoDocumentos.UpdateById(pKValue, nombre);
     }
 }

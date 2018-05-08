@@ -8,17 +8,17 @@ public class EntityArea : IEntity
     {
         _daoAreas = new DaoArea();
     }
-    public IModel GetById(int id)
+    public IModel GetById(int pKValue)
     {   
-        return _daoAreas.GetById(id); 
+        return _daoAreas.GetById(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
         return _daoAreas.GetList();
     }
-    public bool RemoveById(int id)
+    public bool RemoveById(int pKValue)
     {
-        return _daoAreas.RemoveById(id);
+        return _daoAreas.RemoveById(pKValue);
     }
     public bool Insert(string nombre)
     {
@@ -28,8 +28,8 @@ public class EntityArea : IEntity
     {
         return _daoAreas.Insert(nombre, descripcion, responsable);
     }
-    public bool UpdateById(int id, string nombre)
+    public bool UpdateById(int pKValue, string nombre)
     {
-        return _daoAreas.UpdateById(id, nombre);
+        return _daoAreas.UpdateById(pKValue, nombre);
     }
 }

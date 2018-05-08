@@ -2,10 +2,10 @@
 
 public interface IEntity
 {
-    IModel GetById(int id);
+    IModel GetById(int pKValue);
     IEnumerable<IModel> GetList();
-    bool RemoveById(int id);
+    bool RemoveById(int pKValue);
     bool Insert(string nombre);// string descripcion, string responsable
     //bool Insert(IModel model);
-    bool UpdateById(int id, string nombre);
+    bool UpdateById(int pKValue, string nombre);
 }

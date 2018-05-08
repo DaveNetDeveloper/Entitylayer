@@ -2,9 +2,9 @@
 
 public interface IWsEntity
 {
-    bool EliminarById(int id);
+    bool EliminarById(int pKValue);
     IEnumerable<IModel> GetAll();
-    //IModel GetById(IModel pModel);
+    //IModel GetById(IModel model);
     bool Insertar(string nombre);
-    bool UpdateById(int id, string nombre);
+    bool UpdateById(int pKValue, string nombre);
 }

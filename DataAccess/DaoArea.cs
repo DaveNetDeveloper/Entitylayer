@@ -2,15 +2,22 @@
 using System.Collections.Generic; 
 
 public class DaoArea : DbAccess, IDaoEntity
-{ 
+{
+    #region [ ctor. ]
+
     public DaoArea()
     {
         TableName = Constants.TableNameAREA;
+        PrimaryKeyName = "id";
     }
 
-    public IModel GetById(int id)
-    { 
-        AddNewParameter("Id", id); 
+    #endregion
+
+    #region [ public properties ]
+
+    public IModel GetById(int pKValue)
+    {
+        AddNewParameter(PrimaryKeyName, pKValue);
         DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
         if (!DrData.IsClosed)
         {
@@ -32,20 +39,17 @@ public class DaoArea : DbAccess, IDaoEntity
             ModelList = new List<IModel>();
             while (DrData.Read())
             {
-                IModel area = new ModelArea(DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3));
-                ModelList.Add(area);
+                Model = new ModelArea(DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3));
+                ModelList.Add(Model);
             }
         }
         DbConnection.Close();
         return ModelList; 
     }
-    public bool RemoveById(int id)
+    public bool RemoveById(int pKValue)
     {
-        QuerySql = String.Format("DELETE FROM @TableName WHERE ID = @Id");
-        AddNewParameter("Id", id);
-        
-
-        return ExecuteNonQuery();
+        AddNewParameter(PrimaryKeyName, pKValue);
+        return ExecuteNonQuery(QueryTypes.DeleteByPrimary);
     }
     public bool Insert(string nombre, string descripcion, string responsable)
     {
@@ -57,13 +61,15 @@ public class DaoArea : DbAccess, IDaoEntity
 
         return ExecuteNonQuery();
     }
-    public bool UpdateById(int id, string nombre)
+    public bool UpdateById(int pKValue, string nombre)
     {
         QuerySql = String.Format("UPDATE @TableName SET Nombre = @NombreArea WHERE ID = @Id");
-        AddNewParameter("Id", id);
+        AddNewParameter(PrimaryKeyName, pKValue);
         AddNewParameter("NombreArea", nombre);
         
 
         return ExecuteNonQuery();
     }
+     
+    #endregion
 }

@@ -8,24 +8,24 @@ public class EntityTest : IEntity
     {
         _daoTests = new DaoTest();
     }
-    public IModel GetById(int id)
+    public IModel GetById(int pKValue)
     {   
-        return _daoTests.GetById(id); 
+        return _daoTests.GetById(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
         return _daoTests.GetList();
     }
-    public bool RemoveById(int id)
+    public bool RemoveById(int pKValue)
     {
-        return _daoTests.RemoveById(id);
+        return _daoTests.RemoveById(pKValue);
     }
     public bool Insert(string nombre)
     {
         return _daoTests.Insert(nombre, "Descripción del test", string.Empty);
     }
-    public bool UpdateById(int id, string nombre)
+    public bool UpdateById(int pKValue, string nombre)
     {
-        return _daoTests.UpdateById(id, nombre);
+        return _daoTests.UpdateById(pKValue, nombre);
     }
 }

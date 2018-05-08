@@ -61,9 +61,9 @@ public static class Constants
 
     public const string ASP_PAGE_EXTENSION = ".aspx";
 
-    //Database TABLE NAMES CONSTANTS
-    public const string TableNameAREA = "AREA";
-    public const string TableNameDOCUMENTO = "DOCUMENTO";
-    public const string TableNameNOTICIA = "NOTICIA";
-    public const string TableNameDEPARTAMENTO = "DEPARTAMENTO";
+    ////Database TABLE NAMES CONSTANTS
+    //public const string TableNameAREA = "AREA";
+    //public const string TableNameDOCUMENTO = "DOCUMENTO";
+    //public const string TableNameNOTICIA = "NOTICIA";
+    //public const string TableNameDEPARTAMENTO = "DEPARTAMENTO";
 }

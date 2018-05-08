@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic; 
 
-public class DaoDocumento : DbAccess, IDaoEntity
+public class DaoDocumento : DaoBase, IDaoEntity
 {
     #region [ ctor. ]
 
     public DaoDocumento()
     {
-        TableName = Constants.TableNameDOCUMENTO;
+        TableName = DataTableNames.DOCUMENTO;
         PrimaryKeyName = "id";
     }
 

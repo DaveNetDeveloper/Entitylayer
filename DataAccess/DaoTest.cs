@@ -1,27 +1,34 @@
 ﻿using System;
 using System.Collections.Generic; 
 
-public class DaoTest : DbAccess, IDaoEntity
+public class DaoTest : DaoBase, IDaoEntity
 {
+    #region [ ctor. ]
+
     public DaoTest()
     {
-        TableName = "TEST";
+        TableName = DataTableNames.TEST;
+        PrimaryKeyName = "id";
     }
-    public IModel GetById(int id)
-    {
-        IModel test = null; 
-        AddNewParameter("id", id);
+
+    #endregion
+
+    #region [ public properties ]
+
+    public IModel GetById(int pKValue)
+    { 
+        AddNewParameter(PrimaryKeyName, pKValue);
         DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
         if (!DrData.IsClosed)
         {
             while (DrData.Read())
             {
                 //test = new ModelTest(DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3));
-                test = new ModelTest();
+                Model = new ModelTest();
             }
         }
         DbConnection.Close();
-        return test;
+        return Model;
     }
     public IEnumerable<IModel> GetList()
     { 
@@ -34,18 +41,17 @@ public class DaoTest : DbAccess, IDaoEntity
             testsList = new List<IModel>();
             while (DrData.Read())
             {
-                IModel test = new ModelTest();// DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3));
-                testsList.Add(test);
+                Model = new ModelTest();// DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3));
+                testsList.Add(Model);
             }
         }
         DbConnection.Close();
         return testsList; 
     }
-    public bool RemoveById(int id)
+    public bool RemoveById(int pKValue)
     {
-        QueryType = QueryTypes.DeleteByPrimary;
-        AddNewParameter("id", id);
-        return ExecuteNonQuery();
+        AddNewParameter(PrimaryKeyName, pKValue);
+        return ExecuteNonQuery(QueryTypes.DeleteByPrimary); 
     }
     public bool Insert(string nombre, string texto2, string texto3)
     {
@@ -53,11 +59,12 @@ public class DaoTest : DbAccess, IDaoEntity
         
         return ExecuteNonQuery();
     }
-    public bool UpdateById(int id, string nombre)
+    public bool UpdateById(int pKValue, string nombre)
     {
-        QuerySql = String.Format("UPDATE @TableName SET Nombre = '{0}' WHERE ID = {1}", nombre, id);
+        QuerySql = String.Format("UPDATE @TableName SET Nombre = '{0}' WHERE ID = {1}", nombre, pKValue);
         
         return ExecuteNonQuery();
     }
-}
 
+    #endregion
+}

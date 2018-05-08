@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic; 
 
-public class DbAccess : IDbAccess
+public class DaoBase : IDaoBase
 {
     #region [public enums]
 
@@ -14,6 +14,32 @@ public class DbAccess : IDbAccess
         DeleteByPrimary,
         Create,
         Custom
+    }; 
+    public enum DataTableNames
+    {
+        //BioIntranet
+        AREA,
+        DOCUMENTO,
+        NOTICIA,
+        DEPARTAMENTO,
+        IMAGEN,
+        SECCION,
+        AVISO,
+
+        //Gestor Examenes Online
+        CATEGORY,
+        CENTER,
+        CONTACT,
+        CONVOCATION,
+        LITERALES,
+        LOG,
+        PREGUNTA,
+        PRODUCTO,
+        RESPUESTA,
+        TEST,
+        USER_ALUMNO,
+        USER_PRODUCTO,
+        USUARIO_GESTOR 
     };
 
     #endregion
@@ -21,8 +47,7 @@ public class DbAccess : IDbAccess
     #region [public properties]
 
     public QueryTypes QueryType { get; set; }
-    public string TableName { get; set; }
-    //public object PrimaryKeyValue { get; set; }
+    public DataTableNames TableName { get; set; } 
     public string PrimaryKeyName { get; set; }
     public IModel Model { get; set; }
     public List<IModel> ModelList { get; set; }
@@ -59,12 +84,10 @@ public class DbAccess : IDbAccess
         MySqlParametersList.Clear();
         return affectedRecords > 0; ;
     }
-    public void AddNewParameter(string nombreParam, object Value)
+    public void AddNewParameter(string nombreParam, object value)
     {
         if (null == MySqlParametersList) MySqlParametersList = new List<MySqlParameter>();
-
-        var param = new MySqlParameter(nombreParam, Value);
-        MySqlParametersList.Add(param);
+        MySqlParametersList.Add(new MySqlParameter(nombreParam, value));
     }
 
     #endregion
@@ -104,9 +127,8 @@ public class DbAccess : IDbAccess
     {
         DbConnection = new MySqlConnection(Connection_biointranet);
         Command = new MySqlCommand { Connection = DbConnection }; 
-        Command.CommandText = GetSqQueryByQueryType().Replace("@TableName", TableName); 
-        AddParametersToCommand();
-       
+        Command.CommandText = GetSqQueryByQueryType().Replace("@TableName", TableName.ToString()); 
+        AddParametersToCommand(); 
         DbConnection.Open();
     }
     private string GetSqQueryByQueryType()

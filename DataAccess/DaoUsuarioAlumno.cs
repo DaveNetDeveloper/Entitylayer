@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic; 
 
-public class DaoUsuarioAlumno : DbAccess, IDaoEntity
+public class DaoUsuarioAlumno : DaoBase, IDaoEntity
 {
     public DaoUsuarioAlumno()
     {
-        TableName = "user_alumno";
+        TableName = DataTableNames.USER_ALUMNO;
+        PrimaryKeyName = "id";
     }
      
     public IModel GetById(int id)

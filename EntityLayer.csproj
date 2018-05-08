@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\DbAccess.cs" />
+    <Compile Include="Base\DaoBase.cs" />
     <Compile Include="DataAccess\DaoArea.cs" />
     <Compile Include="DataAccess\DaoDocumento.cs" />
     <Compile Include="DataAccess\DaoTest.cs" />
@@ -54,12 +54,10 @@
     <Compile Include="Entities\EntityTest.cs" />
     <Compile Include="Global\Constants.cs" />
     <Compile Include="Global\EntityManager.cs" />
-    <Compile Include="Global\Enums.cs" />
     <Compile Include="Interfaces\IDaoEntity.cs" />
-    <Compile Include="Interfaces\IDbAccess.cs" />
+    <Compile Include="Interfaces\IDaoBase.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IModel.cs" />
-    <Compile Include="Interfaces\IUcEntityList.cs" />
     <Compile Include="Interfaces\IWsEntity.cs" />
     <Compile Include="Models\ModelApartado.cs" />
     <Compile Include="Models\ModelArea.cs" />

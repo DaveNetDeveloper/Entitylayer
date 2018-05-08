@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic; 
 
-public class DaoArea : DbAccess, IDaoEntity
+public class DaoArea : DaoBase, IDaoEntity
 {
     #region [ ctor. ]
 
     public DaoArea()
     {
-        TableName = Constants.TableNameAREA;
+        TableName = DataTableNames.AREA;
         PrimaryKeyName = "id";
     }
 

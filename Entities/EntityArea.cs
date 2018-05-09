@@ -4,10 +4,17 @@ public class EntityArea : IEntity
 {
     private DaoArea _daoAreas;
 
+    #region [ ctors. ]
+
     public EntityArea()
     {
         _daoAreas = new DaoArea();
     }
+
+    #endregion
+
+    #region [ public methods ]
+     
     public IModel GetById(int pKValue)
     {   
         return _daoAreas.GetById(pKValue); 
@@ -32,4 +39,6 @@ public class EntityArea : IEntity
     {
         return _daoAreas.UpdateById(pKValue, nombre);
     }
+    
+    #endregion
 }

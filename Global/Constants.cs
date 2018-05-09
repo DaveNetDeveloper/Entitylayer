@@ -60,10 +60,4 @@ public static class Constants
     //2DO: POR DEFINIR DÍAS DE LA SEMANA, EN ESPAÑOL E INGLÉS:
 
     public const string ASP_PAGE_EXTENSION = ".aspx";
-
-    ////Database TABLE NAMES CONSTANTS
-    //public const string TableNameAREA = "AREA";
-    //public const string TableNameDOCUMENTO = "DOCUMENTO";
-    //public const string TableNameNOTICIA = "NOTICIA";
-    //public const string TableNameDEPARTAMENTO = "DEPARTAMENTO";
 }

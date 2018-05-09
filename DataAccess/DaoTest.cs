@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class DaoTest : DaoBase, IDaoEntity
 {
-    #region [ ctor. ]
+    #region [ ctors. ]
 
     public DaoTest()
     {
@@ -13,7 +13,7 @@ public class DaoTest : DaoBase, IDaoEntity
 
     #endregion
 
-    #region [ public properties ]
+    #region [ public methods ]
 
     public IModel GetById(int pKValue)
     { 

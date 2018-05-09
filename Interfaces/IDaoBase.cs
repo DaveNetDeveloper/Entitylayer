@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public interface IDaoBase
 {
-    DaoBase.DataTableNames TableName { get; set; } 
-    string PrimaryKeyName { get; set; } 
+    #region [ properties ]
 
+    DaoBase.DataTableNames TableName { get; set; } 
+    string PrimaryKeyName { get; set; }  
     String QuerySql { get; set; }
     MySqlDataReader DrData { get; set; }
     MySqlConnection DbConnection { get; set; }
@@ -15,7 +16,13 @@ public interface IDaoBase
     IModel Model { get; set; }
     List<IModel> ModelList { get; set; }
 
+    #endregion
+
+    #region [ methods ]
+
     void AddNewParameter(string nombreParam, object Value);
     MySqlConnection ExecuteDataReader(DaoBase.QueryTypes pQueryType); 
     bool ExecuteNonQuery(DaoBase.QueryTypes pQueryType);
+
+    #endregion
 }

@@ -12,8 +12,7 @@
         UsuarioAlumno,
         UsuarioGestor,
         Contacto
-    };
-
+    }; 
     public static IEntity GetEntity(EntityType pEntityType)
     {
         IEntity entity = null;
@@ -53,6 +52,5 @@
             //    break;
         }
         return entity;
-    }
-     
+    } 
 }

@@ -4,10 +4,17 @@ public class EntityDocumento : IEntity
 {
     private DaoDocumento _daoDocumentos;
 
+    #region [ ctors. ]
+
     public EntityDocumento()
     {
         _daoDocumentos = new DaoDocumento();
     }
+     
+    #endregion
+
+    #region [ public methods ]
+
     public IModel GetById(int pKValue)
     {   
         return _daoDocumentos.GetById(pKValue); 
@@ -28,4 +35,6 @@ public class EntityDocumento : IEntity
     {
         return _daoDocumentos.UpdateById(pKValue, nombre);
     }
+
+    #endregion
 }

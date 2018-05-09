@@ -4,10 +4,17 @@ public class EntityTest : IEntity
 {
     private DaoTest _daoTests;
 
+    #region [ ctors. ]
+
     public EntityTest()
     {
         _daoTests = new DaoTest();
     }
+
+    #endregion
+
+    #region [ public methods ]
+     
     public IModel GetById(int pKValue)
     {   
         return _daoTests.GetById(pKValue); 
@@ -28,4 +35,6 @@ public class EntityTest : IEntity
     {
         return _daoTests.UpdateById(pKValue, nombre);
     }
+
+    #endregion
 }

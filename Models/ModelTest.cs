@@ -2,6 +2,8 @@
 
 public class ModelTest : IModel
 {
+    #region [ ctors. ]
+
     public ModelTest() { }
     public ModelTest(ModelTest test)
     {
@@ -16,6 +18,10 @@ public class ModelTest : IModel
         FechaCreacion = test.FechaCreacion;
     }
 
+    #endregion
+
+    #region [ public properties ]
+
     public int Id { get; set; }
     public string Nombre { get; set; }
     public string Codigo { get; set; }
@@ -25,4 +31,6 @@ public class ModelTest : IModel
     public int IdPregunta { get; set; }
     public int IdProducto { get; set; }
     public DateTime FechaCreacion { get; set; }
+
+    #endregion
 }

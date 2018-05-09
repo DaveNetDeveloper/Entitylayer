@@ -2,8 +2,9 @@
  
 public class ModelUserContact : IModel
 {
-    public ModelUserContact() { }
+    #region [ ctors. ]
 
+    public ModelUserContact() { } 
     public ModelUserContact(string pNombreCompleto, string pTelefono, string pEmail, string pAsunto, string pMensaje)
     {
         NombreCompleto = pNombreCompleto;
@@ -14,6 +15,10 @@ public class ModelUserContact : IModel
         FechaHora = DateTime.Now;
     }
 
+    #endregion
+
+    #region [ public properties ]
+
     public int Id { get; set; }
     public string NombreCompleto { get; set; }
     public string Telefono { get; set; }
@@ -21,4 +26,6 @@ public class ModelUserContact : IModel
     public string Asunto { get; set; }
     public string Mensaje { get; set; }
     public DateTime FechaHora { get; set; }
+
+    #endregion
 }

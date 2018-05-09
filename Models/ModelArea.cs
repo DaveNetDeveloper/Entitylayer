@@ -2,8 +2,9 @@
 
 public class ModelArea : IModel
 {
-    public ModelArea() { }
+    #region [ ctors. ]
 
+    public ModelArea() { } 
     public ModelArea(int id, string ip, string ciudad, string region)
     {
         Id = id;
@@ -11,6 +12,10 @@ public class ModelArea : IModel
         Ciudad = ciudad;
         Region = region;
     }
+
+    #endregion
+
+    #region [ public properties ]
 
     public int Id { get; set; }
     public string IP { get; set; }
@@ -31,4 +36,6 @@ public class ModelArea : IModel
     public string NavegadorProducto { get; set; }
     public string SessionID { get; set; }
     public string SessionStartTicks { get; set; }
+
+    #endregion
 }

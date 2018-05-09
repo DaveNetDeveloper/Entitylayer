@@ -1,8 +1,9 @@
 ﻿ 
 public class ModelApartado : IModel
 {
-    public ModelApartado() { }
+    #region [ ctors. ]
 
+    public ModelApartado() { } 
     public ModelApartado(int id, string nombre, string descripcion, string imagen)
     {
         Id = id;
@@ -11,8 +12,14 @@ public class ModelApartado : IModel
         Imagen = imagen;
     }
 
+    #endregion
+
+    #region [ public properties ]
+
     public int Id { get; set; }
     public string Nombre { get; set; }
     public string Descripcion { get; set; }
-    public string Imagen { get; set; } 
+    public string Imagen { get; set; }
+
+    #endregion
 }

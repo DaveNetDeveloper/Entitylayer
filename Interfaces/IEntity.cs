@@ -5,7 +5,6 @@ public interface IEntity
     IModel GetById(int pKValue);
     IEnumerable<IModel> GetList();
     bool RemoveById(int pKValue);
-    bool Insert(string nombre);// string descripcion, string responsable
-    //bool Insert(IModel model);
+    bool Insert(string nombre); 
     bool UpdateById(int pKValue, string nombre);
 }

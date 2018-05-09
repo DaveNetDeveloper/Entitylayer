@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class DaoArea : DaoBase, IDaoEntity
 {
-    #region [ ctor. ]
+    #region [ ctors. ]
 
     public DaoArea()
     {
@@ -13,7 +13,7 @@ public class DaoArea : DaoBase, IDaoEntity
 
     #endregion
 
-    #region [ public properties ]
+    #region [ public methods ]
 
     public IModel GetById(int pKValue)
     {

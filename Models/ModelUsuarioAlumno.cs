@@ -1,5 +1,6 @@
-﻿using System; 
- 
+﻿using System;
+using System.Collections.Generic;
+
 public class ModelUsuarioAlumno : IModel
 {
     public ModelUsuarioAlumno() { }
@@ -31,4 +32,6 @@ public class ModelUsuarioAlumno : IModel
     public string Phone { get; set; }
     public DateTime Created { get; set; }
     public DateTime Updated { get; set; }
+
+    public IEnumerable<IModel> Productos { get; set; }
 }

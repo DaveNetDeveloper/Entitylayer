@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 
-public class EntityTest : IEntity
+public class EntityProducto : IEntity
 {
     public IDaoEntity DaoEntity { get; set; }
 
     #region [ ctors. ]
 
-    public EntityTest()
+    public EntityProducto()
     {
-        DaoEntity = new DaoTest();
+        DaoEntity = new DaoProducto();
     }
 
     #endregion
@@ -29,7 +29,11 @@ public class EntityTest : IEntity
     }
     public bool Insert(string nombre)
     {
-        return DaoEntity.Insert(nombre, "Descripción del test", string.Empty);
+        return Insert(nombre, string.Empty, string.Empty);
+    }
+    public bool Insert(string nombre, string descripcion, string responsable)
+    {
+        return DaoEntity.Insert(nombre, descripcion, responsable);
     }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
@@ -38,10 +42,10 @@ public class EntityTest : IEntity
     public int GetNextPrimaryKey()
     {
         return DaoEntity.GetNextPrimaryKey();
-    }
-    public void GetByForeignKey()
+    } 
+    public IModel GetByForeignKey()
     {
-        ((DaoTest)DaoEntity).GetByForeignKey();
+        return ((DaoProducto)DaoEntity).GetByForeignKey();
     }
 
     #endregion

@@ -7,6 +7,7 @@
         Convocatoria,
         Documento,
         Pregunta,
+        Producto,
         Respuesta,
         Test,
         UsuarioAlumno,
@@ -38,18 +39,20 @@
                 entity = new EntityTest();
                 break;
             case EntityType.UsuarioAlumno:
-                //entity = new EntityUsuarioAlumno();
+                entity = new EntityUsuarioAlumno();
                 break;
             case EntityType.UsuarioGestor:
-                //entity = new EntityUsuarioGestor();
+               //entity = new EntityUsuarioGestor();
                 break;
             //case Enums.EntityType.Contacto:
             //    entity = new EntityContacto();
             //    break;
-
             //case Enums.EntityType.Apartado:
             //    entity = new EntityApartado();
             //    break;
+            case EntityType.Producto:
+                entity = new EntityProducto();
+                break;
         }
         return entity;
     } 

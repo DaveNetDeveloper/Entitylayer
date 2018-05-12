@@ -67,10 +67,24 @@ public class DaoTest : DaoBase, IDaoEntity
     }
     public int GetNextPrimaryKey()
     {
-
-
-
-        return 0;
+        AddNewParameter(PrimaryKeyName, PrimaryKeyName);
+        DbConnection = ExecuteDataReader(QueryTypes.SelectNextPrimaryKey);
+        if (!DrData.IsClosed)
+        {
+            while (DrData.Read())
+            {
+                NextPrimaryKey = DrData.GetInt32(0);
+            }
+        }
+        DbConnection.Close();
+        MySqlParametersList.Clear();
+        return NextPrimaryKey;
+    } 
+    public IModel GetByForeignKey()
+    {
+        //Cargar el prodcucto al que pertenece el test
+        return new ModelTest();
     }
+
     #endregion
 }

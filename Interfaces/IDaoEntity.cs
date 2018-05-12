@@ -9,5 +9,5 @@ public interface IDaoEntity
     bool RemoveByPrimaryKey(int pKValue);
     bool Insert(string nombre, string texto2, string texto3);
     bool UpdateByPrimaryKey(int pKValue, string nombre);
-    int GetNextPrimaryKey();
+    int GetNextPrimaryKey(); 
 }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic; 
 
-public class DaoDocumento : DaoBase, IDaoEntity
+public class DaoProducto : DaoBase, IDaoEntity
 {
     #region [ ctors. ]
 
-    public DaoDocumento()
+    public DaoProducto()
     {
-        TableName = DataTableNames.DOCUMENTO;
+        TableName = DataTableNames.PRODUCTO;
         PrimaryKeyName = "id";
+        ForeignkeyName = "category_id";
     }
 
     #endregion
@@ -16,51 +17,55 @@ public class DaoDocumento : DaoBase, IDaoEntity
     #region [ public methods ]
 
     public IModel GetByPrimaryKey(int pKValue)
-    { 
+    {
         AddNewParameter(PrimaryKeyName, pKValue);
         DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
         if (!DrData.IsClosed)
         {
             while (DrData.Read())
             {
-                Model = new ModelDocumento(DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3), DrData.GetString(7));
+                Model = new ModelProducto(DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3));
             }
         }
         DbConnection.Close();
+        MySqlParametersList.Clear();
         return Model;
     }
     public IEnumerable<IModel> GetList()
-    { 
-        List<IModel> documentosList = null; 
-        DbConnection = ExecuteDataReader(QueryTypes.SelectAll);
-         
+    {  
+        DbConnection = ExecuteDataReader(QueryTypes.SelectAll); 
         if (!DrData.IsClosed)
         {
-            documentosList = new List<IModel>();
+            ModelList = new List<IModel>();
             while (DrData.Read())
             {
-                Model = new ModelDocumento(DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3), DrData.GetString(7));
-                documentosList.Add(Model);
+                Model = new ModelProducto(DrData.GetInt32(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3));
+                ModelList.Add(Model);
             }
         }
         DbConnection.Close();
-        return documentosList; 
+        return ModelList; 
     }
     public bool RemoveByPrimaryKey(int pKValue)
     {
         AddNewParameter(PrimaryKeyName, pKValue);
         return ExecuteNonQuery(QueryTypes.DeleteByPrimary);
     }
-    public bool Insert(string nombre, string texto2, string texto3)
+    public bool Insert(string nombre, string descripcion, string responsable)
     {
-        QuerySql = String.Format("INSERT INTO @TableName (Nombre, Descripción, Responsable) VALUES('{0}', '{1}', '{2}')", nombre, texto2, texto3);
-        
+        QuerySql = String.Format("INSERT INTO @TableName (Nombre, Descripción, Responsable) VALUES( @NombreArea, @Descripción, @Responsable)");
+        AddNewParameter("NombreArea", nombre);
+        AddNewParameter("Descripción", descripcion);
+        AddNewParameter("Responsable", responsable);
+         
         return ExecuteNonQuery();
     }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
-        QuerySql = String.Format("UPDATE @TableName SET Nombre = '{0}' WHERE ID = {1}", nombre, pKValue);
-        
+        QuerySql = String.Format("UPDATE @TableName SET Nombre = @NombreArea WHERE ID = @Id");
+        AddNewParameter(PrimaryKeyName, pKValue);
+        AddNewParameter("NombreArea", nombre);
+
         return ExecuteNonQuery();
     }
     public int GetNextPrimaryKey()
@@ -77,11 +82,11 @@ public class DaoDocumento : DaoBase, IDaoEntity
         DbConnection.Close();
         MySqlParametersList.Clear();
         return NextPrimaryKey;
-    }
+    } 
     public IModel GetByForeignKey()
     {
-        //Cargar la seccion a la que pertenece el documento
-        return new ModelSeccion();
+        //Cargar la categoria a la que pertenece el producto
+        return new ModelCategoria();
     }
 
     #endregion

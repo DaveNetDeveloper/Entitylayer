@@ -2,13 +2,13 @@
 
 public class EntityDocumento : IEntity
 {
-    private DaoDocumento _daoDocumentos;
+    public IDaoEntity DaoEntity { get; set; }
 
     #region [ ctors. ]
 
     public EntityDocumento()
     {
-        _daoDocumentos = new DaoDocumento();
+        DaoEntity = new DaoDocumento();
     }
      
     #endregion
@@ -17,30 +17,32 @@ public class EntityDocumento : IEntity
 
     public IModel GetByPrimaryKey(int pKValue)
     {   
-        return _daoDocumentos.GetByPrimaryKey(pKValue); 
+        return DaoEntity.GetByPrimaryKey(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
-        return _daoDocumentos.GetList();
+        return DaoEntity.GetList();
     }
     public bool RemoveByPrimaryKey(int pKValue)
     {
-        return _daoDocumentos.RemoveByPrimaryKey(pKValue);
+        return DaoEntity.RemoveByPrimaryKey(pKValue);
     }
     public bool Insert(string nombre)
     {
-        return _daoDocumentos.Insert(nombre, "Descripción del documento", "xxxx@biosystems.es");
+        return DaoEntity.Insert(nombre, "Descripción del documento", "xxxx@biosystems.es");
     }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
-        return _daoDocumentos.UpdateByPrimaryKey(pKValue, nombre);
+        return DaoEntity.UpdateByPrimaryKey(pKValue, nombre);
     }
     public int GetNextPrimaryKey()
     {
-
-
-
-        return 0;
+        return DaoEntity.GetNextPrimaryKey();
     }
+    public void GetByForeignKey()
+    {
+        ((DaoDocumento)DaoEntity).GetByForeignKey();
+    }
+
     #endregion
 }

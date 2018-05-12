@@ -7,7 +7,7 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
     public DaoUsuarioAlumno()
     {
         TableName = DataTableNames.USER_ALUMNO;
-        PrimaryKeyName = "id";
+        PrimaryKeyName = "id"; 
     } 
 
     #endregion
@@ -167,6 +167,11 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
         DbConnection.Close();
         MySqlParametersList.Clear();
         return NextPrimaryKey; 
+    } 
+    public IEnumerable<IModel> GetByForeignKey()  
+    {
+        //Cargar los productos asociados al alumno
+        return new List<IModel>();
     }
 
     #endregion

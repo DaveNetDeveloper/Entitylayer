@@ -12,9 +12,8 @@ public class ModelTest : IModel
         Codigo = test.Codigo;
         Descripcion = test.Descripcion;
         Titulo = test.Titulo;
-        Clave = test.Clave;
-        IdPregunta = test.IdPregunta;
-        IdProducto = test.IdProducto;
+        Clave = test.Clave; 
+        Producto = new ModelProducto();
         FechaCreacion = test.FechaCreacion;
     }
 
@@ -27,9 +26,8 @@ public class ModelTest : IModel
     public string Codigo { get; set; }
     public string Titulo { get; set; }
     public string Descripcion { get; set; }
-    public string Clave { get; set; }
-    public int IdPregunta { get; set; }
-    public int IdProducto { get; set; }
+    public string Clave { get; set; } 
+    public IModel Producto { get; set; }
     public DateTime FechaCreacion { get; set; }
 
     #endregion

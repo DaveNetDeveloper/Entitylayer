@@ -69,9 +69,19 @@ public class DaoArea : DaoBase, IDaoEntity
     }
     public int GetNextPrimaryKey()
     {
-         
+        AddNewParameter(PrimaryKeyName, PrimaryKeyName);
+        DbConnection = ExecuteDataReader(QueryTypes.SelectNextPrimaryKey);
+        if (!DrData.IsClosed)
+        {
+            while (DrData.Read())
+            {
+                NextPrimaryKey = DrData.GetInt32(0);
+            }
+        }
+        DbConnection.Close();
+        MySqlParametersList.Clear();
+        return NextPrimaryKey;
+    }  
 
-        return 0;
-    }
     #endregion
 }

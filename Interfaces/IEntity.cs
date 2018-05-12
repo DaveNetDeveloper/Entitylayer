@@ -2,6 +2,8 @@
 
 public interface IEntity
 {
+    IDaoEntity DaoEntity { get; set; }
+
     IModel GetByPrimaryKey(int pKValue);
     IEnumerable<IModel> GetList();
     bool RemoveByPrimaryKey(int pKValue);

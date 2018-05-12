@@ -2,13 +2,13 @@
 
 public class EntityArea : IEntity
 {
-    private DaoArea _daoAreas;
+    public IDaoEntity DaoEntity { get; set; }
 
     #region [ ctors. ]
 
     public EntityArea()
     {
-        _daoAreas = new DaoArea();
+        DaoEntity = new DaoArea();
     }
 
     #endregion
@@ -17,15 +17,15 @@ public class EntityArea : IEntity
      
     public IModel GetByPrimaryKey(int pKValue)
     {   
-        return _daoAreas.GetByPrimaryKey(pKValue); 
+        return DaoEntity.GetByPrimaryKey(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
-        return _daoAreas.GetList();
+        return DaoEntity.GetList();
     }
     public bool RemoveByPrimaryKey(int pKValue)
     {
-        return _daoAreas.RemoveByPrimaryKey(pKValue);
+        return DaoEntity.RemoveByPrimaryKey(pKValue);
     }
     public bool Insert(string nombre)
     {
@@ -33,18 +33,16 @@ public class EntityArea : IEntity
     }
     public bool Insert(string nombre, string descripcion, string responsable)
     {
-        return _daoAreas.Insert(nombre, descripcion, responsable);
+        return DaoEntity.Insert(nombre, descripcion, responsable);
     }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
-        return _daoAreas.UpdateByPrimaryKey(pKValue, nombre);
+        return DaoEntity.UpdateByPrimaryKey(pKValue, nombre);
     }
     public int GetNextPrimaryKey()
     {
-
-
-
-        return 0;
+        return DaoEntity.GetNextPrimaryKey();
     }
+
     #endregion
 }

@@ -50,6 +50,7 @@ public class DaoBase : IDaoBase
     public QueryTypes QueryType { get; set; }
     public DataTableNames TableName { get; set; } 
     public string PrimaryKeyName { get; set; }
+    public string ForeignkeyName { get; set; }
     public IModel Model { get; set; }
     public List<IModel> ModelList { get; set; }
     public String QuerySql { get; set; }

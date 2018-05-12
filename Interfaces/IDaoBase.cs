@@ -1,5 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
 using System.Collections.Generic;
 
 public interface IDaoBase
@@ -8,6 +7,7 @@ public interface IDaoBase
 
     DaoBase.DataTableNames TableName { get; set; } 
     string PrimaryKeyName { get; set; }
+    string ForeignkeyName { get; set; }
     int NextPrimaryKey { get; set; }
     string QuerySql { get; set; }
     MySqlDataReader DrData { get; set; }

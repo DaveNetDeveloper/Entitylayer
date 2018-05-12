@@ -46,10 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\DaoBase.cs" />
+    <Compile Include="DataAccess\DaoProducto.cs" />
     <Compile Include="DataAccess\DaoArea.cs" />
     <Compile Include="DataAccess\DaoDocumento.cs" />
     <Compile Include="DataAccess\DaoTest.cs" />
     <Compile Include="DataAccess\DaoUsuarioAlumno.cs" />
+    <Compile Include="Entities\EntityProducto.cs" />
     <Compile Include="Entities\EntityArea.cs" />
     <Compile Include="Entities\EntityDocumento.cs" />
     <Compile Include="Entities\EntityTest.cs" />
@@ -61,7 +63,11 @@
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Interfaces\IWsEntity.cs" />
+    <Compile Include="Models\ModelDepartamento.cs" />
+    <Compile Include="Models\ModelSeccion.cs" />
     <Compile Include="Models\ModelApartado.cs" />
+    <Compile Include="Models\ModelCategoria.cs" />
+    <Compile Include="Models\ModelProducto.cs" />
     <Compile Include="Models\ModelArea.cs" />
     <Compile Include="Models\ModelContacto.cs" />
     <Compile Include="Models\ModelConvocatoria.cs" />

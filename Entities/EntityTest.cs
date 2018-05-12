@@ -15,26 +15,30 @@ public class EntityTest : IEntity
 
     #region [ public methods ]
      
-    public IModel GetById(int pKValue)
+    public IModel GetByPrimaryKey(int pKValue)
     {   
-        return _daoTests.GetById(pKValue); 
+        return _daoTests.GetByPrimaryKey(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
         return _daoTests.GetList();
     }
-    public bool RemoveById(int pKValue)
+    public bool RemoveByPrimaryKey(int pKValue)
     {
-        return _daoTests.RemoveById(pKValue);
+        return _daoTests.RemoveByPrimaryKey(pKValue);
     }
     public bool Insert(string nombre)
     {
         return _daoTests.Insert(nombre, "Descripción del test", string.Empty);
     }
-    public bool UpdateById(int pKValue, string nombre)
+    public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
-        return _daoTests.UpdateById(pKValue, nombre);
+        return _daoTests.UpdateByPrimaryKey(pKValue, nombre);
     }
-
+    public int GetNextPrimaryKey()
+    {
+         
+        return 0;
+    }
     #endregion
 }

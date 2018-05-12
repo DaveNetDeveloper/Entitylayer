@@ -15,26 +15,32 @@ public class EntityDocumento : IEntity
 
     #region [ public methods ]
 
-    public IModel GetById(int pKValue)
+    public IModel GetByPrimaryKey(int pKValue)
     {   
-        return _daoDocumentos.GetById(pKValue); 
+        return _daoDocumentos.GetByPrimaryKey(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
         return _daoDocumentos.GetList();
     }
-    public bool RemoveById(int pKValue)
+    public bool RemoveByPrimaryKey(int pKValue)
     {
-        return _daoDocumentos.RemoveById(pKValue);
+        return _daoDocumentos.RemoveByPrimaryKey(pKValue);
     }
     public bool Insert(string nombre)
     {
         return _daoDocumentos.Insert(nombre, "Descripción del documento", "xxxx@biosystems.es");
     }
-    public bool UpdateById(int pKValue, string nombre)
+    public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
-        return _daoDocumentos.UpdateById(pKValue, nombre);
+        return _daoDocumentos.UpdateByPrimaryKey(pKValue, nombre);
     }
+    public int GetNextPrimaryKey()
+    {
 
+
+
+        return 0;
+    }
     #endregion
 }

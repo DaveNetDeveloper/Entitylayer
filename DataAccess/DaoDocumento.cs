@@ -15,7 +15,7 @@ public class DaoDocumento : DaoBase, IDaoEntity
 
     #region [ public methods ]
 
-    public IModel GetById(int pKValue)
+    public IModel GetByPrimaryKey(int pKValue)
     { 
         AddNewParameter(PrimaryKeyName, pKValue);
         DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
@@ -46,7 +46,7 @@ public class DaoDocumento : DaoBase, IDaoEntity
         DbConnection.Close();
         return documentosList; 
     }
-    public bool RemoveById(int pKValue)
+    public bool RemoveByPrimaryKey(int pKValue)
     {
         AddNewParameter(PrimaryKeyName, pKValue);
         return ExecuteNonQuery(QueryTypes.DeleteByPrimary);
@@ -57,12 +57,18 @@ public class DaoDocumento : DaoBase, IDaoEntity
         
         return ExecuteNonQuery();
     }
-    public bool UpdateById(int pKValue, string nombre)
+    public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         QuerySql = String.Format("UPDATE @TableName SET Nombre = '{0}' WHERE ID = {1}", nombre, pKValue);
         
         return ExecuteNonQuery();
     }
+    public int GetNextPrimaryKey()
+    {
 
+
+
+        return 0;
+    }
     #endregion
 }

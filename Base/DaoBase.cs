@@ -13,6 +13,7 @@ public class DaoBase : IDaoBase
         UpdateByPrimary,
         DeleteByPrimary,
         Create,
+        SelectNextPrimaryKey,
         Custom
     }; 
     public enum DataTableNames
@@ -55,7 +56,7 @@ public class DaoBase : IDaoBase
     public MySqlDataReader DrData { get; set; }
     public MySqlConnection DbConnection { get; set; }
     public List<MySqlParameter> MySqlParametersList { get; set; }
-
+    public int NextPrimaryKey { get; set; }
     #endregion
 
     #region [public methods]
@@ -127,11 +128,11 @@ public class DaoBase : IDaoBase
     {
         DbConnection = new MySqlConnection(Connection_biointranet);
         Command = new MySqlCommand { Connection = DbConnection }; 
-        Command.CommandText = GetSqQueryByQueryType().Replace("@TableName", TableName.ToString()); 
+        Command.CommandText = GetSqlByQueryType().Replace("@TableName", TableName.ToString()); 
         AddParametersToCommand(); 
         DbConnection.Open();
     }
-    private string GetSqQueryByQueryType()
+    private string GetSqlByQueryType()
     {
         switch (QueryType)
         {
@@ -149,6 +150,9 @@ public class DaoBase : IDaoBase
                 break;
             case QueryTypes.Create:
 
+                break;
+            case QueryTypes.SelectNextPrimaryKey:
+                QuerySql = " SELECT MAX(@id) + 1 FROM @TableName ";
                 break;
             case QueryTypes.Custom:
 

@@ -15,7 +15,7 @@ public class DaoArea : DaoBase, IDaoEntity
 
     #region [ public methods ]
 
-    public IModel GetById(int pKValue)
+    public IModel GetByPrimaryKey(int pKValue)
     {
         AddNewParameter(PrimaryKeyName, pKValue);
         DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
@@ -32,8 +32,7 @@ public class DaoArea : DaoBase, IDaoEntity
     }
     public IEnumerable<IModel> GetList()
     {  
-        DbConnection = ExecuteDataReader(QueryTypes.SelectAll);
-         
+        DbConnection = ExecuteDataReader(QueryTypes.SelectAll); 
         if (!DrData.IsClosed)
         {
             ModelList = new List<IModel>();
@@ -46,7 +45,7 @@ public class DaoArea : DaoBase, IDaoEntity
         DbConnection.Close();
         return ModelList; 
     }
-    public bool RemoveById(int pKValue)
+    public bool RemoveByPrimaryKey(int pKValue)
     {
         AddNewParameter(PrimaryKeyName, pKValue);
         return ExecuteNonQuery(QueryTypes.DeleteByPrimary);
@@ -57,19 +56,22 @@ public class DaoArea : DaoBase, IDaoEntity
         AddNewParameter("NombreArea", nombre);
         AddNewParameter("Descripción", descripcion);
         AddNewParameter("Responsable", responsable);
-        
-
+         
         return ExecuteNonQuery();
     }
-    public bool UpdateById(int pKValue, string nombre)
+    public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         QuerySql = String.Format("UPDATE @TableName SET Nombre = @NombreArea WHERE ID = @Id");
         AddNewParameter(PrimaryKeyName, pKValue);
         AddNewParameter("NombreArea", nombre);
-        
 
         return ExecuteNonQuery();
     }
-     
+    public int GetNextPrimaryKey()
+    {
+         
+
+        return 0;
+    }
     #endregion
 }

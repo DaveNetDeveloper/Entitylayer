@@ -7,15 +7,15 @@ public interface IDaoBase
     #region [ properties ]
 
     DaoBase.DataTableNames TableName { get; set; } 
-    string PrimaryKeyName { get; set; }  
-    String QuerySql { get; set; }
+    string PrimaryKeyName { get; set; }
+    int NextPrimaryKey { get; set; }
+    string QuerySql { get; set; }
     MySqlDataReader DrData { get; set; }
     MySqlConnection DbConnection { get; set; }
     List<MySqlParameter> MySqlParametersList { get; set; }
-
     IModel Model { get; set; }
     List<IModel> ModelList { get; set; }
-
+    
     #endregion
 
     #region [ methods ]

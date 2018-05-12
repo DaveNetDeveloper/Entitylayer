@@ -15,7 +15,7 @@ public class DaoTest : DaoBase, IDaoEntity
 
     #region [ public methods ]
 
-    public IModel GetById(int pKValue)
+    public IModel GetByPrimaryKey(int pKValue)
     { 
         AddNewParameter(PrimaryKeyName, pKValue);
         DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
@@ -48,7 +48,7 @@ public class DaoTest : DaoBase, IDaoEntity
         DbConnection.Close();
         return testsList; 
     }
-    public bool RemoveById(int pKValue)
+    public bool RemoveByPrimaryKey(int pKValue)
     {
         AddNewParameter(PrimaryKeyName, pKValue);
         return ExecuteNonQuery(QueryTypes.DeleteByPrimary); 
@@ -59,12 +59,18 @@ public class DaoTest : DaoBase, IDaoEntity
         
         return ExecuteNonQuery();
     }
-    public bool UpdateById(int pKValue, string nombre)
+    public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         QuerySql = String.Format("UPDATE @TableName SET Nombre = '{0}' WHERE ID = {1}", nombre, pKValue);
         
         return ExecuteNonQuery();
     }
+    public int GetNextPrimaryKey()
+    {
 
+
+
+        return 0;
+    }
     #endregion
 }

@@ -2,9 +2,12 @@
 
 public interface IDaoEntity
 {
-    IModel GetById(int pKValue);
+    int NextPrimaryKey { get; set; }
+
+    IModel GetByPrimaryKey(int pKValue);
     IEnumerable<IModel> GetList();
-    bool RemoveById(int pKValue);
+    bool RemoveByPrimaryKey(int pKValue);
     bool Insert(string nombre, string texto2, string texto3);
-    bool UpdateById(int pKValue, string nombre);
+    bool UpdateByPrimaryKey(int pKValue, string nombre);
+    int GetNextPrimaryKey();
 }

@@ -8,17 +8,18 @@ public class EntityUsuarioAlumno : IEntity
     {
         _daoUsuarioAlumno = new DaoUsuarioAlumno();
     }
-    public IModel GetById(int id)
+
+    public IModel GetByPrimaryKey(int pKValue)
     {   
-        return _daoUsuarioAlumno.GetById(id); 
+        return _daoUsuarioAlumno.GetByPrimaryKey(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
         return _daoUsuarioAlumno.GetList();
     }
-    public bool RemoveById(int id)
+    public bool RemoveByPrimaryKey(int pKValue)
     {
-        return _daoUsuarioAlumno.RemoveById(id);
+        return _daoUsuarioAlumno.RemoveByPrimaryKey(pKValue);
     }
     public bool Insert(string nombre)
     {
@@ -28,8 +29,12 @@ public class EntityUsuarioAlumno : IEntity
     {
         return _daoUsuarioAlumno.Insert(nombre, texto2, texto3);
     }
-    public bool UpdateById(int id, string nombre)
+    public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
-        return _daoUsuarioAlumno.UpdateById(id, nombre);
+        return _daoUsuarioAlumno.UpdateByPrimaryKey(pKValue, nombre);
+    }
+    public int GetNextPrimaryKey()
+    {
+        return _daoUsuarioAlumno.GetNextPrimaryKey();
     }
 }

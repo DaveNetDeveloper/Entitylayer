@@ -49,9 +49,11 @@
     <Compile Include="DataAccess\DaoArea.cs" />
     <Compile Include="DataAccess\DaoDocumento.cs" />
     <Compile Include="DataAccess\DaoTest.cs" />
+    <Compile Include="DataAccess\DaoUsuarioAlumno.cs" />
     <Compile Include="Entities\EntityArea.cs" />
     <Compile Include="Entities\EntityDocumento.cs" />
     <Compile Include="Entities\EntityTest.cs" />
+    <Compile Include="Entities\EntityUsuarioAlumno.cs" />
     <Compile Include="Global\Constants.cs" />
     <Compile Include="Global\EntityManager.cs" />
     <Compile Include="Interfaces\IDaoEntity.cs" />

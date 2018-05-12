@@ -15,17 +15,17 @@ public class EntityArea : IEntity
 
     #region [ public methods ]
      
-    public IModel GetById(int pKValue)
+    public IModel GetByPrimaryKey(int pKValue)
     {   
-        return _daoAreas.GetById(pKValue); 
+        return _daoAreas.GetByPrimaryKey(pKValue); 
     }
     public IEnumerable<IModel> GetList()
     {
         return _daoAreas.GetList();
     }
-    public bool RemoveById(int pKValue)
+    public bool RemoveByPrimaryKey(int pKValue)
     {
-        return _daoAreas.RemoveById(pKValue);
+        return _daoAreas.RemoveByPrimaryKey(pKValue);
     }
     public bool Insert(string nombre)
     {
@@ -35,10 +35,16 @@ public class EntityArea : IEntity
     {
         return _daoAreas.Insert(nombre, descripcion, responsable);
     }
-    public bool UpdateById(int pKValue, string nombre)
+    public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
-        return _daoAreas.UpdateById(pKValue, nombre);
+        return _daoAreas.UpdateByPrimaryKey(pKValue, nombre);
     }
-    
+    public int GetNextPrimaryKey()
+    {
+
+
+
+        return 0;
+    }
     #endregion
 }

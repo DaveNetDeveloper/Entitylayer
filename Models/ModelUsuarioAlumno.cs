@@ -3,9 +3,24 @@ using System.Collections.Generic;
 
 public class ModelUsuarioAlumno : IModel
 {
-    public ModelUsuarioAlumno() { }
+    public enum ModelFields
+    {
+        Id = 0,
+        Name = 1,
+        Surname = 2,
+        BirthDate = 3,
+        Mail = 4,
+        UserName = 5,
+        Password = 6,
+        Entered = 7,
+        Active = 8,
+        Created = 9,
+        Updated = 10,
+        Phone = 11
+    };
 
-    public ModelUsuarioAlumno(int id, string name, string surname, DateTime birthDate, string mail, string userName, string password, bool entered, bool active, string phone, DateTime created, DateTime updated)
+    public ModelUsuarioAlumno() { } 
+    public ModelUsuarioAlumno(int id, string name, string surname, DateTime birthDate, string mail, string userName, string password, bool entered, bool active, int phone, DateTime created, DateTime updated)
     {
         Id = id;
         Name = name;
@@ -29,7 +44,7 @@ public class ModelUsuarioAlumno : IModel
     public string Password { get; set; }
     public bool Entered { get; set; }
     public bool Active { get; set; }
-    public string Phone { get; set; }
+    public int Phone { get; set; }
     public DateTime Created { get; set; }
     public DateTime Updated { get; set; }
 

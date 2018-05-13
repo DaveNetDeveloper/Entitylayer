@@ -96,12 +96,12 @@ public class DaoBase : IDaoBase
 
     #region [private properties]
 
-    private MySqlCommand Command { get; set; }
+    public MySqlCommand Command { get; set; }
     private string ConnectionString
     {
         get
         {
-            return string.Empty;
+            return "database = qsg265; data source = localhost; user id = dbUser; password = 123; persistsecurityinfo = true; sslMode = none;";
         }
     }
     private string Connection_biointranet
@@ -122,12 +122,13 @@ public class DaoBase : IDaoBase
         if (null != MySqlParametersList && MySqlParametersList.Count > 0)
             foreach (var parameterItem in MySqlParametersList)
             {
-                Command.Parameters.Add(parameterItem);
+                Command.Parameters.AddWithValue(parameterItem.ParameterName, parameterItem.Value);
             }
     }
     private void InitializeConnection()
     {
-        DbConnection = new MySqlConnection(Connection_biointranet);
+        //DbConnection = new MySqlConnection(Connection_biointranet);
+        DbConnection = new MySqlConnection(ConnectionString);
         Command = new MySqlCommand { Connection = DbConnection }; 
         Command.CommandText = GetSqlByQueryType().Replace("@TableName", TableName.ToString()); 
         AddParametersToCommand(); 
@@ -153,7 +154,7 @@ public class DaoBase : IDaoBase
 
                 break;
             case QueryTypes.SelectNextPrimaryKey:
-                QuerySql = " SELECT MAX(@id) + 1 FROM @TableName ";
+                QuerySql = $" SELECT MAX({PrimaryKeyName}) + 1 FROM @TableName ";
                 break;
             case QueryTypes.Custom:
 

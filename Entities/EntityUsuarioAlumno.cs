@@ -40,10 +40,4 @@ public class EntityUsuarioAlumno : IEntity
     {
         return DaoEntity.GetNextPrimaryKey();
     }
-
-    //custom
-    public IEnumerable<IModel> GetByForeignKey()
-    {
-        return ((DaoUsuarioAlumno)DaoEntity).GetByForeignKey();
-    }
 }

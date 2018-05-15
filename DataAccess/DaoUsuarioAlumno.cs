@@ -47,85 +47,21 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
                     Object fildValue = GetFieldValue(fieldIndex, fieldType);
                     LoadFieldIntoModel(fieldIndex, fildValue);
                 }
-
-                //if (!dr.IsDBNull(1))
-                //{
-                //    privateUserName.Text = dr.GetString(1);
-                //}
-
-                //if (!dr.IsDBNull(2))
-                //{
-                //    privateUserSurname.Text = dr.GetString(2);
-                //}
-
-                //if (!dr.IsDBNull(3))
-                //{
-                //    privateUserBirthDate.Text = dr.GetDateTime(3).ToString("dd/MM/yyyy");
-                //}
-
-                //if (!dr.IsDBNull(4))
-                //{
-                //    privateUserMail.Text = dr.GetString(4);
-                //}
-
-                //if (!dr.IsDBNull(5))
-                //{
-                //    privateUserUserName.Text = dr.GetString(5);
-                //}
-
-                //if (!dr.IsDBNull(6))
-                //{
-                //    privateUserPassword.Text = dr.GetString(6).ToString();
-                //}
-
-                //if (!dr.IsDBNull(7))
-                //{
-                //    privateUserEntered.Checked = ((dr.GetInt32(7) == 0) ? false : true);
-                //}
-
-                //if (!dr.IsDBNull(8))
-                //{
-                //    privateUserActive.Checked = ((dr.GetInt32(8) == 0) ? false : true);
-                //}
-
-                //if (!dr.IsDBNull(9))
-                //{
-                //    if (Mode == "N")
-                //    {
-                //        privateUserCreated.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                //    }
-                //    else if (Mode == "E")
-                //    {
-                //        privateUserCreated.Text = dr.GetDateTime(9).ToString("dd/MM/yyyy");
-                //    }
-                //    else if (Mode == "V")
-                //    {
-                //        privateUserCreated.Text = dr.GetDateTime(9).ToString("dd/MM/yyyy");
-                //    }
-                //}
-
-                //if (!dr.IsDBNull(10))
-                //{
-                //    if (Mode == "E")
-                //    {
-                //        privateUserUpdated.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                //    }
-                //    else if (Mode == "V")
-                //    {
-                //        privateUserUpdated.Text = dr.GetDateTime(10).ToString("dd/MM/yyyy");
-                //    }
-                //}
-
-                //if (!dr.IsDBNull(11))
-                //{
-                //    privateUserPhone.Text = dr.GetInt32(11).ToString();
-                //}
-
             }
         }
         DbConnection.Close();
         MySqlParametersList.Clear();
         Command.Dispose();
+
+
+        //((ModelUsuarioAlumno)Model).Productos = GetByForeignKey(pKValue);
+
+        // Aqui mirar la nueva propiedad ListOf ForeignKey Field (que contiene el nombre de las tablas relacinadas) y a traves de la
+        // propiedad "primaryKeyName" del DAO que sea, sabré el campo primaryKey para filtrar la entidad foranea 
+        // Hacer metodo que llame al "SelectByPrimaryKey" de cada DAO que aparezca en la lista de Tablas foraneas
+        // y asigne la entidad devuelta a la propiedad foranea en el modelo actual  
+
+
         return Model;
     }
     public IEnumerable<IModel> GetList()
@@ -197,12 +133,7 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
         DbConnection.Close();
         if(MySqlParametersList != null) MySqlParametersList.Clear();
         return NextPrimaryKey; 
-    } 
-    public IEnumerable<IModel> GetByForeignKey()  
-    {
-        //Cargar los productos asociados al alumno
-        return new List<IModel>();
-    }
+    }  
 
     #endregion
 
@@ -275,6 +206,15 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
                 break;
         }
         return fieldValue;
+    }
+
+    #endregion
+
+    #region [ private methods ]
+
+    private void GetByForeignKey(int pKValue)
+    { 
+
     }
 
     #endregion

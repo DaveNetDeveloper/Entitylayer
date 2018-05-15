@@ -78,7 +78,12 @@ public class DaoDocumento : DaoBase, IDaoEntity
         MySqlParametersList.Clear();
         return NextPrimaryKey;
     }
-    public IModel GetByForeignKey()
+
+    #endregion
+
+    #region [ private methods ]
+
+    private IModel GetByForeignKey()
     {
         //Cargar la seccion a la que pertenece el documento
         return new ModelSeccion();

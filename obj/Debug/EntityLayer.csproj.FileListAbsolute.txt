@@ -2,6 +2,7 @@ C:\Users\David\Desktop\Repositorios\EntityLayer\bin\Debug\EntityLayer.dll
 C:\Users\David\Desktop\Repositorios\EntityLayer\bin\Debug\EntityLayer.pdb
 C:\Users\David\Desktop\Repositorios\EntityLayer\bin\Debug\MySql.Data.dll
 C:\Users\David\Desktop\Repositorios\EntityLayer\bin\Debug\MySql.Data.xml
+C:\Users\David\Desktop\Repositorios\EntityLayer\obj\Debug\EntityLayer.csprojResolveAssemblyReference.cache
 C:\Users\David\Desktop\Repositorios\EntityLayer\obj\Debug\EntityLayer.csproj.CoreCompileInputs.cache
 C:\Users\David\Desktop\Repositorios\EntityLayer\obj\Debug\EntityLayer.dll
 C:\Users\David\Desktop\Repositorios\EntityLayer\obj\Debug\EntityLayer.pdb

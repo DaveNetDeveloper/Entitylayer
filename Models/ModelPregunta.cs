@@ -1,4 +1,5 @@
-﻿ 
+﻿using System.Collections.Generic;
+
 public class ModelPregunta : IModel
 {
     public ModelPregunta() { }
@@ -20,5 +21,5 @@ public class ModelPregunta : IModel
 
     public IModel Test { get; set; }
     public IModel Apartado { get; set; }
-     
+    public IEnumerable<IModel> Respuestas { get; set; }
 }

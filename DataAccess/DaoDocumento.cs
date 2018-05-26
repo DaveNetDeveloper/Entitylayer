@@ -83,7 +83,7 @@ public class DaoDocumento : DaoBase, IDaoEntity
 
     #region [ private methods ]
 
-    private IModel GetByForeignKey()
+    public IModel GetByForeignKey()
     {
         //Cargar la seccion a la que pertenece el documento
         return new ModelSeccion();

@@ -181,7 +181,7 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
                 break;
         }
     }
-    private Object GetFieldValue(int fieldIndex, Type fieldType)
+    private Object GetFieldValue(int fieldIndex, Type fieldType) //mover a DaoBase?
     {
         Object fieldValue;
         switch (fieldType.Name)
@@ -207,11 +207,6 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
         }
         return fieldValue;
     }
-
-    #endregion
-
-    #region [ private methods ]
-
     private void GetByForeignKey(int pKValue)
     { 
 

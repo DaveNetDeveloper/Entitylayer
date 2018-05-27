@@ -59,6 +59,12 @@ public class DaoArea : DaoBase, IDaoEntity
          
         return ExecuteNonQuery();
     }
+    public bool Insert(IModel model)
+    {
+        Model = model;
+        //QueryTypes.Insert 
+        return true;
+    }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         QuerySql = String.Format("UPDATE @TableName SET Nombre = @NombreArea WHERE ID = @Id");
@@ -66,6 +72,12 @@ public class DaoArea : DaoBase, IDaoEntity
         AddNewParameter("NombreArea", nombre);
 
         return ExecuteNonQuery();
+    }
+    public bool UpdateByPrimaryKey(IModel model)
+    {
+        Model = model;
+        //QueryTypes.UpdateByPrimaryKey
+        return true;
     }
     public int GetNextPrimaryKey()
     {

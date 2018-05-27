@@ -31,6 +31,10 @@ public class EntityProducto : IEntity
     {
         return Insert(nombre, string.Empty, string.Empty);
     }
+    public bool Insert(IModel model)
+    {
+        return DaoEntity.Insert(model);
+    }
     public bool Insert(string nombre, string descripcion, string responsable)
     {
         return DaoEntity.Insert(nombre, descripcion, responsable);
@@ -38,6 +42,10 @@ public class EntityProducto : IEntity
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         return DaoEntity.UpdateByPrimaryKey(pKValue, nombre);
+    }
+    public bool UpdateByPrimaryKey(IModel model)
+    {
+        return DaoEntity.UpdateByPrimaryKey(model);
     }
     public int GetNextPrimaryKey()
     {

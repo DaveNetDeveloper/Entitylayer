@@ -11,6 +11,7 @@ public class DaoBase : IDaoBase
         SelectAll,
         SelectByPrimary,
         UpdateByPrimary,
+        Insert,
         DeleteByPrimary,
         Create,
         SelectNextPrimaryKey,
@@ -145,6 +146,9 @@ public class DaoBase : IDaoBase
                 QuerySql = " SELECT * FROM @TableName WHERE ID = @id ";
                 break;
             case QueryTypes.UpdateByPrimary:
+
+                break;
+            case QueryTypes.Insert:
 
                 break;
             case QueryTypes.DeleteByPrimary:

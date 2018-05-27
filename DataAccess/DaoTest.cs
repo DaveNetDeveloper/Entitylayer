@@ -59,11 +59,23 @@ public class DaoTest : DaoBase, IDaoEntity
         
         return ExecuteNonQuery();
     }
+    public bool Insert(IModel model)
+    {
+        Model = model;
+        //QueryTypes.Insert 
+        return true;
+    }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         QuerySql = String.Format("UPDATE @TableName SET Nombre = '{0}' WHERE ID = {1}", nombre, pKValue);
         
         return ExecuteNonQuery();
+    }
+    public bool UpdateByPrimaryKey(IModel model)
+    {
+        Model = model;
+        //QueryTypes.UpdateByPrimaryKey
+        return true;
     }
     public int GetNextPrimaryKey()
     {

@@ -31,9 +31,17 @@ public class EntityTest : IEntity
     {
         return DaoEntity.Insert(nombre, "Descripción del test", string.Empty);
     }
+    public bool Insert(IModel model)
+    {
+        return DaoEntity.Insert(model);
+    }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         return DaoEntity.UpdateByPrimaryKey(pKValue, nombre);
+    }
+    public bool UpdateByPrimaryKey(IModel model)
+    {
+        return DaoEntity.UpdateByPrimaryKey(model);
     }
     public int GetNextPrimaryKey()
     {

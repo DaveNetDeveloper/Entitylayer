@@ -112,6 +112,12 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
          
         return ExecuteNonQuery();
     }
+    public bool Insert(IModel model)
+    {
+        Model = model;
+        //QueryTypes.Insert 
+        return true;
+    } 
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         QuerySql = $"UPDATE @TableName SET Nombre = @Nombre WHERE ID = @{PrimaryKeyName}";
@@ -119,6 +125,12 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
         AddNewParameter("Nombre", nombre);
 
         return ExecuteNonQuery();
+    }
+    public bool UpdateByPrimaryKey(IModel model)
+    {
+        Model = model;
+        //QueryTypes.UpdateByPrimaryKey
+        return true;
     }
     public int GetNextPrimaryKey()
     {

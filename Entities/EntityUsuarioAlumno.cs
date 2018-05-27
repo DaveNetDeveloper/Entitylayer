@@ -11,7 +11,7 @@ public class EntityUsuarioAlumno : IEntity
         DaoEntity = new DaoUsuarioAlumno();
     }
 
-    //methods from interfaces
+    //methods
     public IModel GetByPrimaryKey(int pKValue)
     {   
         return DaoEntity.GetByPrimaryKey(pKValue); 
@@ -32,9 +32,17 @@ public class EntityUsuarioAlumno : IEntity
     {
         return DaoEntity.Insert(nombre, texto2, texto3);
     }
+    public bool Insert(IModel model)
+    {
+        return DaoEntity.Insert(model);
+    }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         return DaoEntity.UpdateByPrimaryKey(pKValue, nombre);
+    }
+    public bool UpdateByPrimaryKey(IModel model)
+    {
+        return DaoEntity.UpdateByPrimaryKey(model);
     }
     public int GetNextPrimaryKey()
     {

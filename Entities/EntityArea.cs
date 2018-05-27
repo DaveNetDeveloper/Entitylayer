@@ -35,9 +35,17 @@ public class EntityArea : IEntity
     {
         return DaoEntity.Insert(nombre, descripcion, responsable);
     }
+    public bool Insert(IModel model)
+    {
+        return DaoEntity.Insert(model);
+    }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
         return DaoEntity.UpdateByPrimaryKey(pKValue, nombre);
+    }
+    public bool UpdateByPrimaryKey(IModel model)
+    {
+        return DaoEntity.UpdateByPrimaryKey(model);
     }
     public int GetNextPrimaryKey()
     {

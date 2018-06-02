@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class DaoUsuarioAlumno : DaoBase, IDaoEntity
 {
-    public enum DataTableFields
+    public enum DataTableFields 
     {
         id = 0,
         name = 1,
@@ -24,7 +24,14 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
     public DaoUsuarioAlumno()
     {
         TableName = DataTableNames.USER_ALUMNO;
-        PrimaryKeyName = "id"; 
+        PrimaryKeyName = "id";
+
+
+        // Recorrer lista de campos de la tabla actual - "GetFielsListFromDataTable()"
+        // Asignar valores a la lista de campos de la tabla de bd
+
+        FieldsList.Add(new fieldsValues { fieldName = "", fieldValue = "" });
+
     } 
 
     #endregion
@@ -97,6 +104,13 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
         AddNewParameter("Name", name);
         AddNewParameter("Surname", surname);
         AddNewParameter("Mail", mail);
+
+         
+        foreach (fieldsValues fieldValue in FieldsList)
+        {
+
+
+        }
 
         // name 
         // surname 
@@ -193,32 +207,7 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
                 break;
         }
     }
-    private Object GetFieldValue(int fieldIndex, Type fieldType) //mover a DaoBase?
-    {
-        Object fieldValue;
-        switch (fieldType.Name)
-        {
-            case "String":
-                fieldValue = DrData.GetString(fieldIndex);
-                break;
-            case "DateTime":
-                fieldValue = DrData.GetDateTime(fieldIndex);
-                break;
-            case "Boolean":
-                fieldValue = DrData.GetBoolean(fieldIndex);
-                break;
-            case "Int32":
-                fieldValue = DrData.GetInt32(fieldIndex);
-                break;
-            case "Decimal":
-                fieldValue = DrData.GetDecimal(fieldIndex);
-                break;
-            default:
-                fieldValue = null;
-                break;
-        }
-        return fieldValue;
-    }
+
     private void GetByForeignKey(int pKValue)
     { 
 

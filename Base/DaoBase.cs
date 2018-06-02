@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using EntityLayer;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic; 
 
@@ -59,6 +60,8 @@ public class DaoBase : IDaoBase
     public MySqlConnection DbConnection { get; set; }
     public List<MySqlParameter> MySqlParametersList { get; set; }
     public int NextPrimaryKey { get; set; }
+    public List<fieldsValues> FieldsList { get; set; }
+
     #endregion
 
     #region [public methods]
@@ -93,6 +96,64 @@ public class DaoBase : IDaoBase
         MySqlParametersList.Add(new MySqlParameter(nombreParam, value));
     }
 
+    public Object GetFieldValue(int fieldIndex, Type fieldType)
+    {
+        Object fieldValue;
+        switch (fieldType.Name)
+        {
+            case "String":
+                fieldValue = DrData.GetString(fieldIndex);
+                break;
+            case "DateTime":
+                fieldValue = DrData.GetDateTime(fieldIndex);
+                break;
+            case "Boolean":
+                fieldValue = DrData.GetBoolean(fieldIndex);
+                break;
+            case "Int32":
+                fieldValue = DrData.GetInt32(fieldIndex);
+                break;
+            case "Decimal":
+                fieldValue = DrData.GetDecimal(fieldIndex);
+                break;
+            default:
+                fieldValue = null;
+                break;
+        }
+        return fieldValue;
+    }
+
+    public void GetFielsListFromDataTable() //Convertir en función ??
+    {
+        string sqlQuery = $"SELECT Column_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = {TableName}";
+
+        MySqlConnection cnn = new MySqlConnection(Settings.Default.Connection_qsg265);
+        MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
+        cnn.Open();
+
+        //Crear FieldsEntity ??
+        //Instanciar lista de campos para la tabla "dataTableFieldsList"
+
+        MySqlDataReader DataReader = mc.ExecuteReader();
+        if (!DataReader.IsClosed)
+        {
+            while (DataReader.Read())
+            { 
+                //setear las propiedades de la entity de tipo "DataTableField" de cada registro de information_schema.columns
+                //añadir el campo a la lista de campos "dataTableFieldsList"
+
+                DataReader.GetString(0);
+                DataReader.GetString(1);
+                DataReader.GetInt32(2);
+                DataReader.GetString(3);
+                DataReader.GetInt32(4);
+                DataReader.GetString(5);
+                
+            }
+        }
+        cnn.Close();
+    }
+
     #endregion
 
     #region [private properties]
@@ -113,6 +174,13 @@ public class DaoBase : IDaoBase
             //return ConfigurationManager.ConnectionStrings["Connection_qsg265"].ConnectionString;
         }
     }
+
+    public struct fieldsValues
+    {
+        public String fieldName;
+        public String fieldValue;
+    }
+
 
     #endregion
 

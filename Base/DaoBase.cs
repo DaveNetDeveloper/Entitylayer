@@ -1,7 +1,7 @@
 ﻿using EntityLayer;
 using MySql.Data.MySqlClient;
+using System.Collections.Generic;
 using System;
-using System.Collections.Generic; 
 
 public class DaoBase : IDaoBase
 {
@@ -60,7 +60,7 @@ public class DaoBase : IDaoBase
     public MySqlConnection DbConnection { get; set; }
     public List<MySqlParameter> MySqlParametersList { get; set; }
     public int NextPrimaryKey { get; set; }
-    public List<fieldsValues> FieldsList { get; set; }
+    public List<ModelDataBaseField> FieldsList { get; set; }
 
     #endregion
 
@@ -95,7 +95,6 @@ public class DaoBase : IDaoBase
         if (null == MySqlParametersList) MySqlParametersList = new List<MySqlParameter>();
         MySqlParametersList.Add(new MySqlParameter(nombreParam, value));
     }
-
     public Object GetFieldValue(int fieldIndex, Type fieldType)
     {
         Object fieldValue;
@@ -122,39 +121,43 @@ public class DaoBase : IDaoBase
         }
         return fieldValue;
     }
-
-    public void GetFielsListFromDataTable() //Convertir en función ??
+    public List<ModelDataBaseField> FillFielsListFromDataTable()
     {
-        string sqlQuery = $"SELECT Column_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = {TableName}";
-
+        FieldsList = null;
+        string sqlQuery = $"SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = {TableName}";
         MySqlConnection cnn = new MySqlConnection(Settings.Default.Connection_qsg265);
         MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
         cnn.Open();
-
-        //Crear FieldsEntity ??
-        //Instanciar lista de campos para la tabla "dataTableFieldsList"
-
+         
         MySqlDataReader DataReader = mc.ExecuteReader();
         if (!DataReader.IsClosed)
         {
+            FieldsList = new List<ModelDataBaseField>();
             while (DataReader.Read())
-            { 
-                //setear las propiedades de la entity de tipo "DataTableField" de cada registro de information_schema.columns
-                //añadir el campo a la lista de campos "dataTableFieldsList"
+            {
+                if(DataReader.GetString(5).ToUpper().Equals("PRI"))
+                {
+                    PrimaryKeyName = $"{PrimaryKeyName},{DataReader.GetString(1)}";
+                }
 
-                DataReader.GetString(0);
-                DataReader.GetString(1);
-                DataReader.GetInt32(2);
-                DataReader.GetString(3);
-                DataReader.GetInt32(4);
-                DataReader.GetString(5);
-                
+                FieldsList.Add (
+                    new ModelDataBaseField()
+                    {
+                        Data_Type = DataReader.GetString(0),
+                        Column_Name = DataReader.GetString(1),
+                        Ordinal_Position = DataReader.GetInt32(2),
+                        Is_Nullable = DataReader.GetString(3).ToUpper() == "YES" ? true : false,
+                        Character_Maximum_Length = DataReader.GetInt32(4),
+                        Column_Key = DataReader.GetString(5).ToUpper().Equals("PRI") ? true : false
+                    } );
             }
-        }
-        cnn.Close();
+        } cnn.Close();
+        return FieldsList;
     }
-
+    
     #endregion
+
+    #region [privates]
 
     #region [private properties]
 
@@ -173,14 +176,7 @@ public class DaoBase : IDaoBase
             return "database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;";
             //return ConfigurationManager.ConnectionStrings["Connection_qsg265"].ConnectionString;
         }
-    }
-
-    public struct fieldsValues
-    {
-        public String fieldName;
-        public String fieldValue;
-    }
-
+    } 
 
     #endregion
 
@@ -234,6 +230,8 @@ public class DaoBase : IDaoBase
         }
         return QuerySql;
     }
+
+    #endregion
 
     #endregion
 }

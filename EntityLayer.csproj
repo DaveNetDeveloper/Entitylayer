@@ -76,6 +76,7 @@
     <Compile Include="Models\ModelRespuesta.cs" />
     <Compile Include="Models\ModelTest.cs" />
     <Compile Include="Models\ModelUsuarioAlumno.cs" />
+    <Compile Include="Models\ModelDataBaseField.cs" />
     <Compile Include="Models\ModelUsuarioGestor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.Designer.cs">

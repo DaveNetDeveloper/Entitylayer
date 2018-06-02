@@ -23,15 +23,8 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
 
     public DaoUsuarioAlumno()
     {
-        TableName = DataTableNames.USER_ALUMNO;
-        PrimaryKeyName = "id";
-
-
-        // Recorrer lista de campos de la tabla actual - "GetFielsListFromDataTable()"
-        // Asignar valores a la lista de campos de la tabla de bd
-
-        FieldsList.Add(new fieldsValues { fieldName = "", fieldValue = "" });
-
+        TableName = DataTableNames.USER_ALUMNO; 
+        FillFielsListFromDataTable(); 
     } 
 
     #endregion
@@ -104,14 +97,7 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
         AddNewParameter("Name", name);
         AddNewParameter("Surname", surname);
         AddNewParameter("Mail", mail);
-
          
-        foreach (fieldsValues fieldValue in FieldsList)
-        {
-
-
-        }
-
         // name 
         // surname 
         // birth_date 
@@ -123,13 +109,18 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
         // created 
         // updated 
         // phone 
-         
+
         return ExecuteNonQuery();
     }
     public bool Insert(IModel model)
     {
         Model = model;
-        //QueryTypes.Insert 
+        //QueryTypes.Insert...
+
+        foreach (ModelDataBaseField dbField in FieldsList)
+        {
+            AddNewParameter(dbField.Column_Name, typeof(ModelUsuarioAlumno).GetProperties().GetValue(dbField.Ordinal_Position)); 
+        }
         return true;
     } 
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
@@ -206,8 +197,7 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
                 ((ModelUsuarioAlumno)Model).Phone = (int)fildValue;
                 break;
         }
-    }
-
+    } 
     private void GetByForeignKey(int pKValue)
     { 
 

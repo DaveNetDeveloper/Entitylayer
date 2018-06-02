@@ -15,7 +15,8 @@ public interface IDaoBase
     List<MySqlParameter> MySqlParametersList { get; set; }
     IModel Model { get; set; }
     List<IModel> ModelList { get; set; }
-    
+    List<ModelDataBaseField> FieldsList { get; set; }
+
     #endregion
 
     #region [ methods ]

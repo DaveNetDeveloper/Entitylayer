@@ -1,29 +1,15 @@
 ﻿using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.Reflection;
 
 public class DaoUsuarioAlumno : DaoBase, IDaoEntity
 {
-    public enum DataTableFields 
-    {
-        id = 0,
-        name = 1,
-        surname = 2,
-        birth_date = 3,
-        mail = 4,
-        user_name = 5,
-        password = 6,
-        entered = 7,
-        active = 8,
-        created = 9,
-        updated = 10,
-        phone = 11
-    };
-
     #region [ ctors. ]
 
-    public DaoUsuarioAlumno()
+    public DaoUsuarioAlumno(Type modelClass)
     {
-        TableName = DataTableNames.USER_ALUMNO; 
+        TableName = DataTableNames.USER_ALUMNO;
+        ModelClass = modelClass;
         FillFielsListFromDataTable(); 
     } 
 
@@ -33,35 +19,41 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
 
     public IModel GetByPrimaryKey(int pKValue)
     {
-        AddNewParameter(PrimaryKeyName, pKValue);
-        DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
-        if (!DrData.IsClosed)
+        try
         {
-            while (DrData.Read())
+            AddNewParameter(PrimaryKeyName, pKValue);
+            DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
+            if (!DrData.IsClosed)
             {
-                Model = new ModelUsuarioAlumno();
-
-                for (int fieldIndex = 0; fieldIndex < DrData.FieldCount; fieldIndex++)
+                while (DrData.Read())
                 {
-                    var fieldType = DrData.GetFieldType(fieldIndex);
-                    Object fildValue = GetFieldValue(fieldIndex, fieldType);
-                    LoadFieldIntoModel(fieldIndex, fildValue);
+                    Model = (IModel)Activator.CreateInstance(ModelClass);
+
+                    for (int fieldIndex = 0; fieldIndex < DrData.FieldCount; fieldIndex++)
+                    {
+                        var fieldType = DrData.GetFieldType(fieldIndex);
+                        SetFieldValueIntoModel(fieldIndex, fieldType);
+                    }
                 }
             }
+
+            //((ModelUsuarioAlumno)Model).Productos = GetByForeignKey(pKValue);
+
+            // Aqui mirar la nueva propiedad ListOf ForeignKey Field (que contiene el nombre de las tablas relacinadas) y a traves de la
+            // propiedad "primaryKeyName" del DAO que sea, sabré el campo primaryKey para filtrar la entidad foranea 
+            // Hacer metodo que llame al "SelectByPrimaryKey" de cada DAO que aparezca en la lista de Tablas foraneas
+            // y asigne la entidad devuelta a la propiedad foranea en el modelo actual  
         }
-        DbConnection.Close();
-        MySqlParametersList.Clear();
-        Command.Dispose();
-
-
-        //((ModelUsuarioAlumno)Model).Productos = GetByForeignKey(pKValue);
-
-        // Aqui mirar la nueva propiedad ListOf ForeignKey Field (que contiene el nombre de las tablas relacinadas) y a traves de la
-        // propiedad "primaryKeyName" del DAO que sea, sabré el campo primaryKey para filtrar la entidad foranea 
-        // Hacer metodo que llame al "SelectByPrimaryKey" de cada DAO que aparezca en la lista de Tablas foraneas
-        // y asigne la entidad devuelta a la propiedad foranea en el modelo actual  
-
-
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            DbConnection.Close();
+            MySqlParametersList.Clear();
+            Command.Dispose();
+        }  
         return Model;
     }
     public IEnumerable<IModel> GetList()
@@ -72,13 +64,11 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
             ModelList = new List<IModel>();
             while (DrData.Read())
             {
-                //IModel area = new ModelUsuarioAlumno(DrData.GetFieldType(0), DrData.GetString(1), (DrData.IsDBNull(2)) ? string.Empty : DrData.GetString(2), DrData.GetString(3));
-                Model = new ModelUsuarioAlumno(); 
+                Model = (IModel)Activator.CreateInstance(ModelClass);
                 for (int fieldIndex = 0; fieldIndex < DrData.FieldCount; fieldIndex++)
                 {
                     var fieldType = DrData.GetFieldType(fieldIndex);
-                    Object fildValue = GetFieldValue(fieldIndex, fieldType);
-                    LoadFieldIntoModel(fieldIndex, fildValue);
+                    SetFieldValueIntoModel(fieldIndex, fieldType); 
                 }
                 ModelList.Add(Model);
             }
@@ -91,37 +81,21 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
         AddNewParameter(PrimaryKeyName, pKValue);
         return ExecuteNonQuery(QueryTypes.DeleteByPrimary);
     }
-    public bool Insert(string name, string surname, string mail)
-    {
-        QuerySql = "INSERT INTO @TableName (name, surname, mail) VALUES( @Name, @Surname, @Mail)";
-        AddNewParameter("Name", name);
-        AddNewParameter("Surname", surname);
-        AddNewParameter("Mail", mail);
-         
-        // name 
-        // surname 
-        // birth_date 
-        // mail 
-        // user_name 
-        // password 
-        // entered 
-        // active 
-        // created 
-        // updated 
-        // phone 
-
-        return ExecuteNonQuery();
-    }
     public bool Insert(IModel model)
     {
         Model = model;
-        //QueryTypes.Insert...
 
-        foreach (ModelDataBaseField dbField in FieldsList)
+        var i = 0;
+        foreach (PropertyInfo property in ModelClass.GetProperties())
         {
-            AddNewParameter(dbField.Column_Name, typeof(ModelUsuarioAlumno).GetProperties().GetValue(dbField.Ordinal_Position)); 
+            if (i >= FieldsList.Count) break;
+
+            var pos = FieldsList[i].Ordinal_Position -1;
+            var propertyValue = model.GetType().GetProperty(property.Name).GetValue(model, null);
+            AddNewParameter(FieldsList[pos].Column_Name, propertyValue);
+            i ++;
         }
-        return true;
+        return ExecuteNonQuery(QueryTypes.Insert);
     } 
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
@@ -156,48 +130,6 @@ public class DaoUsuarioAlumno : DaoBase, IDaoEntity
 
     #region [ private methods ]
 
-    private void LoadFieldIntoModel(int fieldIndex, Object fildValue)
-    {
-        switch (fieldIndex)
-        {
-            case (int)DataTableFields.id:
-                Model.Id = (int)fildValue;
-                break;
-            case (int)DataTableFields.name:
-                ((ModelUsuarioAlumno)Model).Name = (string)fildValue;
-                break;
-            case (int)DataTableFields.surname:
-                ((ModelUsuarioAlumno)Model).Surname = (string)fildValue;
-                break;
-            case (int)DataTableFields.birth_date:
-                ((ModelUsuarioAlumno)Model).BirthDate = (DateTime)fildValue;
-                break;
-            case (int)DataTableFields.mail:
-                ((ModelUsuarioAlumno)Model).Mail = (string)fildValue;
-                break;
-            case (int)DataTableFields.user_name:
-                ((ModelUsuarioAlumno)Model).UserName = (string)fildValue;
-                break;
-            case (int)DataTableFields.password:
-                ((ModelUsuarioAlumno)Model).Password = (string)fildValue;
-                break;
-            case (int)DataTableFields.entered:
-                ((ModelUsuarioAlumno)Model).Entered = ((int)fildValue == 1 ? true : false);
-                break;
-            case (int)DataTableFields.active:
-                ((ModelUsuarioAlumno)Model).Active = ((int)fildValue == 1 ? true : false);
-                break;
-            case (int)DataTableFields.created:
-                ((ModelUsuarioAlumno)Model).Created = (DateTime)fildValue;
-                break;
-            case (int)DataTableFields.updated:
-                ((ModelUsuarioAlumno)Model).Updated = (DateTime)fildValue;
-                break;
-            case (int)DataTableFields.phone:
-                ((ModelUsuarioAlumno)Model).Phone = (int)fildValue;
-                break;
-        }
-    } 
     private void GetByForeignKey(int pKValue)
     { 
 

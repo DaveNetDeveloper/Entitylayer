@@ -5,9 +5,10 @@ public class DaoDocumento : DaoBase, IDaoEntity
 {
     #region [ ctors. ]
 
-    public DaoDocumento()
+    public DaoDocumento(Type modelClass)
     {
         TableName = DataTableNames.DOCUMENTO;
+        ModelClass = modelClass;
         PrimaryKeyName = "id";
     }
 

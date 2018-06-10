@@ -27,14 +27,6 @@ public class EntityArea : IEntity
     {
         return DaoEntity.RemoveByPrimaryKey(pKValue);
     }
-    public bool Insert(string nombre)
-    {
-        return Insert(nombre, "Descripción del area", "nombre@mail.com");
-    }
-    public bool Insert(string nombre, string descripcion, string responsable)
-    {
-        return DaoEntity.Insert(nombre, descripcion, responsable);
-    }
     public bool Insert(IModel model)
     {
         return DaoEntity.Insert(model);
@@ -47,7 +39,7 @@ public class EntityArea : IEntity
     {
         return DaoEntity.UpdateByPrimaryKey(model);
     }
-    public int GetNextPrimaryKey()
+    private int GetNextPrimaryKey()
     {
         return DaoEntity.GetNextPrimaryKey();
     }

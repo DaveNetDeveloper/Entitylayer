@@ -19,7 +19,7 @@ public class ModelUsuarioAlumno : IModel
         Phone = 11
     };
 
-    public ModelUsuarioAlumno() { } 
+    public ModelUsuarioAlumno() { Id = -1; } 
     public ModelUsuarioAlumno(int id, string name, string surname, DateTime birthDate, string mail, string userName, string password, bool entered, bool active, int phone, DateTime created, DateTime updated)
     {
         Id = id;
@@ -44,9 +44,8 @@ public class ModelUsuarioAlumno : IModel
     public string Password { get; set; }
     public bool Entered { get; set; }
     public bool Active { get; set; }
-    public int Phone { get; set; }
     public DateTime Created { get; set; }
     public DateTime Updated { get; set; }
-
-    public IEnumerable<IModel> Productos { get; set; }
+    public int Phone { get; set; }
+    //public IEnumerable<IModel> Productos { get; set; }
 }

@@ -7,9 +7,7 @@ public interface IEntity
     IModel GetByPrimaryKey(int pKValue);
     IEnumerable<IModel> GetList();
     bool RemoveByPrimaryKey(int pKValue);
-    bool Insert(string nombre);
     bool Insert(IModel model);
     bool UpdateByPrimaryKey(int pKValue, string nombre);
     bool UpdateByPrimaryKey(IModel model);
-    int GetNextPrimaryKey();
 }

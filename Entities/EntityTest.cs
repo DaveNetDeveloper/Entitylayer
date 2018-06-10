@@ -27,10 +27,6 @@ public class EntityTest : IEntity
     {
         return DaoEntity.RemoveByPrimaryKey(pKValue);
     }
-    public bool Insert(string nombre)
-    {
-        return DaoEntity.Insert(nombre, "Descripción del test", string.Empty);
-    }
     public bool Insert(IModel model)
     {
         return DaoEntity.Insert(model);
@@ -43,7 +39,7 @@ public class EntityTest : IEntity
     {
         return DaoEntity.UpdateByPrimaryKey(model);
     }
-    public int GetNextPrimaryKey()
+    private int GetNextPrimaryKey()
     {
         return DaoEntity.GetNextPrimaryKey();
     }

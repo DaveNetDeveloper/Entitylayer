@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class EntityDocumento : IEntity
 {
@@ -6,9 +7,9 @@ public class EntityDocumento : IEntity
 
     #region [ ctors. ]
 
-    public EntityDocumento()
+    public EntityDocumento(Type modelClass)
     {
-        DaoEntity = new DaoDocumento();
+        DaoEntity = new DaoDocumento(modelClass);
     }
      
     #endregion
@@ -27,10 +28,6 @@ public class EntityDocumento : IEntity
     {
         return DaoEntity.RemoveByPrimaryKey(pKValue);
     }
-    public bool Insert(string nombre)
-    {
-        return DaoEntity.Insert(nombre, "Descripción del documento", "xxxx@biosystems.es");
-    }
     public bool Insert(IModel model)
     {
         return DaoEntity.Insert(model);
@@ -43,7 +40,7 @@ public class EntityDocumento : IEntity
     {
         return DaoEntity.UpdateByPrimaryKey(model);
     }
-    public int GetNextPrimaryKey()
+    private int GetNextPrimaryKey()
     {
         return DaoEntity.GetNextPrimaryKey();
     }

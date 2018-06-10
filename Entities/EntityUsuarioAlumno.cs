@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class EntityUsuarioAlumno : IEntity
 {
@@ -6,14 +7,14 @@ public class EntityUsuarioAlumno : IEntity
     public IDaoEntity DaoEntity { get; set; }
 
     //ctror.
-    public EntityUsuarioAlumno()
+    public EntityUsuarioAlumno(Type modelClass)
     {
-        DaoEntity = new DaoUsuarioAlumno();
+        DaoEntity = new DaoUsuarioAlumno(modelClass);
     }
 
     //methods
     public IModel GetByPrimaryKey(int pKValue)
-    {   
+    {
         return DaoEntity.GetByPrimaryKey(pKValue); 
     }
     public IEnumerable<IModel> GetList()
@@ -24,16 +25,9 @@ public class EntityUsuarioAlumno : IEntity
     {
         return DaoEntity.RemoveByPrimaryKey(pKValue);
     }
-    public bool Insert(string nombre)
-    {
-        return Insert(nombre, string.Empty, string.Empty);
-    }
-    public bool Insert(string nombre, string texto2, string texto3)
-    {
-        return DaoEntity.Insert(nombre, texto2, texto3);
-    }
     public bool Insert(IModel model)
     {
+        model.Id = GetNextPrimaryKey();
         return DaoEntity.Insert(model);
     }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
@@ -44,7 +38,9 @@ public class EntityUsuarioAlumno : IEntity
     {
         return DaoEntity.UpdateByPrimaryKey(model);
     }
-    public int GetNextPrimaryKey()
+
+    //private methods
+    private int GetNextPrimaryKey()
     {
         return DaoEntity.GetNextPrimaryKey();
     }

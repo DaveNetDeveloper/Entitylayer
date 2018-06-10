@@ -49,6 +49,7 @@ public class DaoBase : IDaoBase
 
     #region [public properties]
 
+    public Type ModelClass { get; set; }
     public QueryTypes QueryType { get; set; }
     public DataTableNames TableName { get; set; } 
     public string PrimaryKeyName { get; set; }
@@ -75,12 +76,19 @@ public class DaoBase : IDaoBase
     } 
     public bool ExecuteNonQuery(QueryTypes pQueryType)
     {
-        QueryType = pQueryType;
-        InitializeConnection(); 
-        int affectedRecords = Command.ExecuteNonQuery();
-        DbConnection.Close();
-        MySqlParametersList.Clear();
-        return affectedRecords > 0; ;
+        try {
+            QueryType = pQueryType;
+            InitializeConnection();
+            int affectedRecords = Command.ExecuteNonQuery();
+            DbConnection.Close();
+            MySqlParametersList.Clear();
+            return affectedRecords > 0; 
+        }
+        catch {
+            DbConnection.Close();
+            MySqlParametersList.Clear();
+            return false;
+        } 
     }
     public bool ExecuteNonQuery()
     {
@@ -95,14 +103,14 @@ public class DaoBase : IDaoBase
         if (null == MySqlParametersList) MySqlParametersList = new List<MySqlParameter>();
         MySqlParametersList.Add(new MySqlParameter(nombreParam, value));
     }
-    public Object GetFieldValue(int fieldIndex, Type fieldType)
+    public void SetFieldValueIntoModel(int fieldIndex, Type fieldType)
     {
         Object fieldValue;
         switch (fieldType.Name)
         {
             case "String":
                 fieldValue = DrData.GetString(fieldIndex);
-                break;
+                break; 
             case "DateTime":
                 fieldValue = DrData.GetDateTime(fieldIndex);
                 break;
@@ -117,14 +125,21 @@ public class DaoBase : IDaoBase
                 break;
             default:
                 fieldValue = null;
-                break;
+                break; 
         }
-        return fieldValue;
+
+        if(fieldType.Equals(typeof(Int32)) & ModelClass.GetProperties()[fieldIndex].PropertyType.Equals(typeof(Boolean)))
+        {
+            fieldValue = fieldValue.Equals(1) ? true : false;
+        }
+
+        Model.GetType().GetProperty(ModelClass.GetProperties()[fieldIndex].Name).SetValue(Model, fieldValue);
+
     }
-    public List<ModelDataBaseField> FillFielsListFromDataTable()
+    protected List<ModelDataBaseField> FillFielsListFromDataTable()
     {
         FieldsList = null;
-        string sqlQuery = $"SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = {TableName}";
+        string sqlQuery = $"SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = '{TableName}'";
         MySqlConnection cnn = new MySqlConnection(Settings.Default.Connection_qsg265);
         MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
         cnn.Open();
@@ -137,7 +152,7 @@ public class DaoBase : IDaoBase
             {
                 if(DataReader.GetString(5).ToUpper().Equals("PRI"))
                 {
-                    PrimaryKeyName = $"{PrimaryKeyName},{DataReader.GetString(1)}";
+                    PrimaryKeyName = String.IsNullOrEmpty(PrimaryKeyName) ? DataReader.GetString(1) : $"{PrimaryKeyName},{DataReader.GetString(1)}";
                 }
 
                 FieldsList.Add (
@@ -147,7 +162,7 @@ public class DaoBase : IDaoBase
                         Column_Name = DataReader.GetString(1),
                         Ordinal_Position = DataReader.GetInt32(2),
                         Is_Nullable = DataReader.GetString(3).ToUpper() == "YES" ? true : false,
-                        Character_Maximum_Length = DataReader.GetInt32(4),
+                        Character_Maximum_Length = DataReader.IsDBNull(4) ? 0 : DataReader.GetInt32(4),
                         Column_Key = DataReader.GetString(5).ToUpper().Equals("PRI") ? true : false
                     } );
             }
@@ -214,13 +229,45 @@ public class DaoBase : IDaoBase
                 break;
             case QueryTypes.Insert:
 
+                QuerySql = "INSERT INTO @TableName(";
+
+                var queryValues = string.Empty;
+                var queryNames = string.Empty;
+
+                foreach (var parameterItem in MySqlParametersList)
+                {
+                    queryNames += parameterItem.ParameterName + ",";
+
+                    object value = null;
+                    switch (parameterItem.MySqlDbType)
+                    {
+                        case MySqlDbType.Byte:
+                            value = ((bool)parameterItem.Value == true) ? 1 : 0;
+                            break;
+
+                        case MySqlDbType.VarChar:
+                        case MySqlDbType.DateTime:
+                            value = $"'{parameterItem.Value}'";
+                            break;
+
+                        default:
+                             value = parameterItem.Value;
+                            break;
+                    }
+                    queryValues += value + ",";
+                }
+                queryNames = queryNames.Remove(queryNames.LastIndexOf(","));
+                queryValues = queryValues.Remove(queryValues.LastIndexOf(","));
+
+                QuerySql += queryNames + ") VALUES(";
+                QuerySql += queryValues + ")";
+
                 break;
+
             case QueryTypes.DeleteByPrimary:
                 QuerySql = " DELETE FROM @TableName WHERE ID = @id ";
                 break;
-            case QueryTypes.Create:
 
-                break;
             case QueryTypes.SelectNextPrimaryKey:
                 QuerySql = $" SELECT MAX({PrimaryKeyName}) + 1 FROM @TableName ";
                 break;
@@ -232,6 +279,6 @@ public class DaoBase : IDaoBase
     }
 
     #endregion
-
+    
     #endregion
 }

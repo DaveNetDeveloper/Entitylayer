@@ -27,17 +27,9 @@ public class EntityProducto : IEntity
     {
         return DaoEntity.RemoveByPrimaryKey(pKValue);
     }
-    public bool Insert(string nombre)
-    {
-        return Insert(nombre, string.Empty, string.Empty);
-    }
     public bool Insert(IModel model)
     {
         return DaoEntity.Insert(model);
-    }
-    public bool Insert(string nombre, string descripcion, string responsable)
-    {
-        return DaoEntity.Insert(nombre, descripcion, responsable);
     }
     public bool UpdateByPrimaryKey(int pKValue, string nombre)
     {
@@ -47,7 +39,7 @@ public class EntityProducto : IEntity
     {
         return DaoEntity.UpdateByPrimaryKey(model);
     }
-    public int GetNextPrimaryKey()
+    private int GetNextPrimaryKey()
     {
         return DaoEntity.GetNextPrimaryKey();
     } 

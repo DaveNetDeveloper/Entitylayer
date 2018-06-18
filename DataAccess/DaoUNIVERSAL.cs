@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-public class DaoUsuarioAlumno : DaoBase, IDaoEntity
+public class DaoUNIVERSAL : DaoBase, IDaoEntity
 {
     #region [ ctors. ]
 
-    public DaoUsuarioAlumno(Type modelClass) => InitializeData(modelClass);
+    public DaoUNIVERSAL(Type modelClass) => InitializeData(modelClass);
 
     private void InitializeData(Type modelClass)
     {

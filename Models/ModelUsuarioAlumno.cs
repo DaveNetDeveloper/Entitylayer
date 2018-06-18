@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 
 public class ModelUsuarioAlumno : IModel
 {
@@ -19,7 +19,7 @@ public class ModelUsuarioAlumno : IModel
         Phone = 11
     };
 
-    public ModelUsuarioAlumno() { Id = -1; } 
+    public ModelUsuarioAlumno() => Id = -1;
     public ModelUsuarioAlumno(int id, string name, string surname, DateTime birthDate, string mail, string userName, string password, bool entered, bool active, int phone, DateTime created, DateTime updated)
     {
         Id = id;

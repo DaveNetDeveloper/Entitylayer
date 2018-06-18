@@ -47,18 +47,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\DaoBase.cs" />
+    <Compile Include="Common\BussinesTypedObject.cs" />
     <Compile Include="DataAccess\DaoProducto.cs" />
     <Compile Include="DataAccess\DaoArea.cs" />
     <Compile Include="DataAccess\DaoDocumento.cs" />
     <Compile Include="DataAccess\DaoTest.cs" />
+    <Compile Include="DataAccess\DaoUNIVERSAL.cs" />
     <Compile Include="DataAccess\DaoUsuarioAlumno.cs" />
     <Compile Include="Entities\EntityProducto.cs" />
     <Compile Include="Entities\EntityArea.cs" />
     <Compile Include="Entities\EntityDocumento.cs" />
     <Compile Include="Entities\EntityTest.cs" />
     <Compile Include="Entities\EntityUsuarioAlumno.cs" />
-    <Compile Include="Global\Constants.cs" />
-    <Compile Include="Global\EntityManager.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\EntityManager.cs" />
     <Compile Include="Interfaces\IDaoEntity.cs" />
     <Compile Include="Interfaces\IDaoBase.cs" />
     <Compile Include="Interfaces\IEntity.cs" />

@@ -17,7 +17,7 @@ public class DaoBase : IDaoBase
         Create,
         SelectNextPrimaryKey,
         Custom
-    }; 
+    };  
     public enum DataTableNames
     {
         //BioIntranet
@@ -46,17 +46,29 @@ public class DaoBase : IDaoBase
     };
 
     #endregion
-
+    
     #region [public properties]
 
     public Type ModelClass { get; set; }
-    public QueryTypes QueryType { get; set; }
+
+    private IModel _model;
+    public IModel Model
+    {
+        get {
+            if (_model == null) _model = (IModel)Activator.CreateInstance(ModelClass);
+            return _model;
+        }
+        set {
+            _model = value;
+        }
+    }
+    public List<IModel> ModelList { get; set; } 
     public DataTableNames TableName { get; set; } 
     public string PrimaryKeyName { get; set; }
     public string ForeignkeyName { get; set; }
-    public IModel Model { get; set; }
-    public List<IModel> ModelList { get; set; }
+    public QueryTypes QueryType { get; set; }
     public String QuerySql { get; set; }
+    public MySqlCommand Command { get; set; }
     public MySqlDataReader DrData { get; set; }
     public MySqlConnection DbConnection { get; set; }
     public List<MySqlParameter> MySqlParametersList { get; set; }
@@ -106,8 +118,7 @@ public class DaoBase : IDaoBase
     public void SetFieldValueIntoModel(int fieldIndex, Type fieldType)
     {
         Object fieldValue;
-        switch (fieldType.Name)
-        {
+        switch (fieldType.Name) {
             case "String":
                 fieldValue = DrData.GetString(fieldIndex);
                 break; 
@@ -133,31 +144,28 @@ public class DaoBase : IDaoBase
             fieldValue = fieldValue.Equals(1) ? true : false;
         }
 
-        Model.GetType().GetProperty(ModelClass.GetProperties()[fieldIndex].Name).SetValue(Model, fieldValue);
-
+        var propertyName = ModelClass.GetProperties()[fieldIndex].Name;
+        Model.GetType().GetProperty(propertyName).SetValue(Model, fieldValue);
     }
-    protected List<ModelDataBaseField> FillFielsListFromDataTable()
+    public List<ModelDataBaseField> FillFielsListFromDataTable()
     {
-        FieldsList = null;
-        string sqlQuery = $"SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = '{TableName}'";
+        string sqlQuery = $" SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = '{TableName}'";
         MySqlConnection cnn = new MySqlConnection(Settings.Default.Connection_qsg265);
         MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
         cnn.Open();
-         
         MySqlDataReader DataReader = mc.ExecuteReader();
-        if (!DataReader.IsClosed)
-        {
-            FieldsList = new List<ModelDataBaseField>();
+
+        FieldsList = new List<ModelDataBaseField>();
+        if (!DataReader.IsClosed) {
+            
             while (DataReader.Read())
             {
-                if(DataReader.GetString(5).ToUpper().Equals("PRI"))
-                {
+                if(DataReader.GetString(5).ToUpper().Equals("PRI")) {
                     PrimaryKeyName = String.IsNullOrEmpty(PrimaryKeyName) ? DataReader.GetString(1) : $"{PrimaryKeyName},{DataReader.GetString(1)}";
                 }
 
                 FieldsList.Add (
-                    new ModelDataBaseField()
-                    {
+                    new ModelDataBaseField() {
                         Data_Type = DataReader.GetString(0),
                         Column_Name = DataReader.GetString(1),
                         Ordinal_Position = DataReader.GetInt32(2),
@@ -176,18 +184,15 @@ public class DaoBase : IDaoBase
 
     #region [private properties]
 
-    public MySqlCommand Command { get; set; }
     private string ConnectionString
     {
-        get
-        {
+        get {
             return "database = qsg265; data source = localhost; user id = dbUser; password = 123; persistsecurityinfo = true; sslMode = none;";
         }
     }
     private string Connection_biointranet
     {
-        get
-        {
+        get {
             return "database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;";
             //return ConfigurationManager.ConnectionStrings["Connection_qsg265"].ConnectionString;
         }
@@ -200,8 +205,7 @@ public class DaoBase : IDaoBase
     private void AddParametersToCommand()
     {
         if (null != MySqlParametersList && MySqlParametersList.Count > 0)
-            foreach (var parameterItem in MySqlParametersList)
-            {
+            foreach (var parameterItem in MySqlParametersList) {
                 Command.Parameters.AddWithValue(parameterItem.ParameterName, parameterItem.Value);
             }
     }
@@ -216,16 +220,15 @@ public class DaoBase : IDaoBase
     }
     private string GetSqlByQueryType()
     {
-        switch (QueryType)
-        {
+        switch (QueryType) {
             case QueryTypes.SelectAll:
-                QuerySql = " SELECT * FROM @TableName ";
+                QuerySql = $" SELECT * FROM @TableName ";
                 break;
             case QueryTypes.SelectByPrimary:
-                QuerySql = " SELECT * FROM @TableName WHERE ID = @id ";
+                QuerySql = $" SELECT * FROM @TableName WHERE {PrimaryKeyName} = @id ";
                 break;
             case QueryTypes.UpdateByPrimary:
-
+                //TODO
                 break;
             case QueryTypes.Insert:
 
@@ -234,13 +237,12 @@ public class DaoBase : IDaoBase
                 var queryValues = string.Empty;
                 var queryNames = string.Empty;
 
-                foreach (var parameterItem in MySqlParametersList)
-                {
+                foreach (var parameterItem in MySqlParametersList) {
+
                     queryNames += parameterItem.ParameterName + ",";
 
                     object value = null;
-                    switch (parameterItem.MySqlDbType)
-                    {
+                    switch (parameterItem.MySqlDbType) {
                         case MySqlDbType.Byte:
                             value = ((bool)parameterItem.Value == true) ? 1 : 0;
                             break;
@@ -261,18 +263,16 @@ public class DaoBase : IDaoBase
 
                 QuerySql += queryNames + ") VALUES(";
                 QuerySql += queryValues + ")";
-
                 break;
 
             case QueryTypes.DeleteByPrimary:
-                QuerySql = " DELETE FROM @TableName WHERE ID = @id ";
+                QuerySql = $" DELETE FROM @TableName WHERE {PrimaryKeyName} = @id ";
                 break;
 
             case QueryTypes.SelectNextPrimaryKey:
                 QuerySql = $" SELECT MAX({PrimaryKeyName}) + 1 FROM @TableName ";
                 break;
             case QueryTypes.Custom:
-
                 break; 
         }
         return QuerySql;

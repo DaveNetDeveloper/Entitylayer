@@ -1,8 +1,11 @@
 ﻿/// <summary>
-/// Descripción breve de Constantes
+///  Constantes globales para uso de la capa de negocio
 /// </summary>
 public static class Constants
 {
+    // TODO Crear todas las contantes posibles en tablas maestras en la base de datos
+    //      --> levantar estos datos al iniciar la aplicación y guardarlo en cache (Session)
+
     public const string languageCode_ESPAÑOL = "es";
     public const string languageCode_CATALAN = "ca";
     public const string languageCode_INGLES = "en";

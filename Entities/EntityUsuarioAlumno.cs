@@ -7,7 +7,7 @@ public class EntityUsuarioAlumno : IEntity
     public IDaoEntity DaoEntity { get; set; }
 
     //ctror.
-    public EntityUsuarioAlumno(Type modelClass) => DaoEntity = new DaoUsuarioAlumno(modelClass);
+    public EntityUsuarioAlumno(Type modelClass) => DaoEntity = new DaoUsuarioAlumno(modelClass); //Crear instancia del DAO que toque a traves del tipo guarado en "TypedBO"
 
     //methods
     public IModel GetByPrimaryKey(int pKValue) => DaoEntity.GetByPrimaryKey(pKValue);

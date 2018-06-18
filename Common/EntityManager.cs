@@ -7,6 +7,7 @@ public static class EntityManager
     
     public static IEntity GetEntity() => (IEntity)Activator.CreateInstance(TypedBO.BussinesLayerType, args: TypedBO.ModelLayerType);
     public static IModel GetModel() => (IModel)Activator.CreateInstance(TypedBO.ModelLayerType);
+
     private static IDaoEntity GetDAO() => (IDaoEntity)Activator.CreateInstance(TypedBO.DataLayerType);
 
     public static BussinesTypedObject GetBussinesObjectType(BOType bussinesObjectEnum)
@@ -15,7 +16,6 @@ public static class EntityManager
         switch (bussinesObjectEnum)
         {
             case BOType.UsuarioAlumno:
-
                 TypedBO.BussinesLayerType = typeof(EntityUsuarioAlumno);
                 TypedBO.ModelLayerType = typeof(ModelUsuarioAlumno);
                 TypedBO.DataLayerType = typeof(DaoUsuarioAlumno);

@@ -2,7 +2,7 @@
 
 public class BussinesTypedObject
 {
-    public enum BOType
+    public enum BussinesObjectTypeEnum
     {
         UsuarioAlumno,
         UsuarioGestor,
@@ -12,6 +12,7 @@ public class BussinesTypedObject
     public Type BussinesLayerType;
     public Type DataLayerType;
     public Type ModelLayerType;
+    public DaoBase.DataTableNames DataTableName;
 
     //public Type BussinesInstanceType
     //{

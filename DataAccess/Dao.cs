@@ -2,20 +2,13 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-public class DaoUNIVERSAL : DaoBase, IDaoEntity
+public class Dao : DaoBase, IDaoEntity
 {
     #region [ ctors. ]
 
-    public DaoUNIVERSAL(Type modelClass) => InitializeData(modelClass);
+    public Dao(BussinesTypedObject TypedBO) => InitializeData(TypedBO.ModelLayerType, TypedBO.DataTableName);
 
-    private void InitializeData(Type modelClass)
-    {
-        TableName = DataTableNames.USER_ALUMNO;
-        ModelClass = modelClass;
-        FillFielsListFromDataTable();
-    }
-
-    #endregion
+    #endregion 
 
     #region [ public methods ]
 
@@ -27,7 +20,6 @@ public class DaoUNIVERSAL : DaoBase, IDaoEntity
 
             if (!DrData.IsClosed) {
                 while (DrData.Read()) {
-                    //Model = (IModel)Activator.CreateInstance(ModelClass);
                     for (int fieldIndex = 0; fieldIndex < DrData.FieldCount; fieldIndex++) {
                         var fieldType = DrData.GetFieldType(fieldIndex);
                         SetFieldValueIntoModel(fieldIndex, fieldType);
@@ -125,6 +117,12 @@ public class DaoUNIVERSAL : DaoBase, IDaoEntity
     private void GetByForeignKey(int pKValue)
     { 
 
+    }
+    private void InitializeData(Type modelClass, DataTableNames dataTableName)
+    {
+        ModelClass = modelClass;
+        TableName = dataTableName;
+        FillFielsListFromDataTable();
     }
 
     #endregion

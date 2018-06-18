@@ -1,38 +1,65 @@
 ﻿using System;
-using static BussinesTypedObject;
 
-public static class EntityManager
+public class EntityManager
 {
-    private static BussinesTypedObject TypedBO;
-    
-    public static IEntity GetEntity() => (IEntity)Activator.CreateInstance(TypedBO.BussinesLayerType, args: TypedBO.ModelLayerType);
-    public static IModel GetModel() => (IModel)Activator.CreateInstance(TypedBO.ModelLayerType);
+    #region [ ctors. ]
 
-    private static IDaoEntity GetDAO() => (IDaoEntity)Activator.CreateInstance(TypedBO.DataLayerType);
-
-    public static BussinesTypedObject GetBussinesObjectType(BOType bussinesObjectEnum)
-    {
-        TypedBO = new BussinesTypedObject();
-        switch (bussinesObjectEnum)
-        {
-            case BOType.UsuarioAlumno:
-                TypedBO.BussinesLayerType = typeof(EntityUsuarioAlumno);
-                TypedBO.ModelLayerType = typeof(ModelUsuarioAlumno);
-                TypedBO.DataLayerType = typeof(DaoUsuarioAlumno);
-                break;
-
-            case BOType.Documento:
-                TypedBO.BussinesLayerType = typeof(EntityDocumento);
-                TypedBO.ModelLayerType = typeof(ModelDocumento);
-                TypedBO.DataLayerType = typeof(DaoDocumento);
-                break;
-        }
-        return TypedBO;
+    public EntityManager() {
     }
 
-    private static string EntityName => "Entity";
-    private static string ModelName => "Model";
+    #endregion 
+
+    #region [ properties ]
+
+    private BussinesTypedObject _typedBO;
+    public BussinesTypedObject TypedBO => _typedBO;
+
+    #endregion
+
+    #region [ public methods ]
+
+    public IEntity GetEntity() => (IEntity)Activator.CreateInstance(_typedBO.BussinesLayerType, args: _typedBO);
+    public IModel GetModel() => (IModel)Activator.CreateInstance(_typedBO.ModelLayerType);
+
+    public void InitializeTypes(BussinesTypedObject.BussinesObjectTypeEnum bussinesObject)
+    {
+        _typedBO = new BussinesTypedObject();
+        switch (bussinesObject)
+        {
+            case BussinesTypedObject.BussinesObjectTypeEnum.UsuarioAlumno:
+                //_typedBO.BussinesLayerType = typeof(EntityUsuarioAlumno);
+                _typedBO.ModelLayerType = typeof(ModelUsuarioAlumno);
+                //_typedBO.DataLayerType = typeof(DaoUsuarioAlumno);
+                _typedBO.DataTableName = DaoBase.DataTableNames.User_Alumno;
+                break;
+
+            case BussinesTypedObject.BussinesObjectTypeEnum.Documento:
+                //_typedBO.BussinesLayerType = typeof(EntityDocumento);
+                _typedBO.ModelLayerType = typeof(ModelDocumento);
+                //_typedBO.DataLayerType = typeof(DaoDocumento);
+                _typedBO.DataTableName = DaoBase.DataTableNames.Documento;
+                break;
+        }
+
+        _typedBO.BussinesLayerType = typeof(Entity);
+        _typedBO.DataLayerType = typeof(Dao);
+    }
+
+    #endregion 
+
+    #region [ private methods ]
+
+    private IDaoEntity GetDAO() => (IDaoEntity)Activator.CreateInstance(_typedBO.DataLayerType, args: _typedBO);
+
+    #endregion
+
+    #region [ TODO ]
+
+    //private static string EntityName => "Entity";
+    //private static string ModelName => "Model";
 
     // metodos privados "GetEntityName" que usen contsantes privadas "Entity" y "Model" y "Dao" para construir los
     // nombres de las clases de negocio ui y datos que se utilizan en los switch y en la llamada a instance de reflexion 
+
+    #endregion
 }

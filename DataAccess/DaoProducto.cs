@@ -7,7 +7,7 @@ public class DaoProducto : DaoBase, IDaoEntity
 
     public DaoProducto()
     {
-        TableName = DataTableNames.PRODUCTO;
+        TableName = DataTableNames.Producto;
         PrimaryKeyName = "id";
         ForeignkeyName = "category_id";
     }

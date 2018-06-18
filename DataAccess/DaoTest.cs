@@ -7,7 +7,7 @@ public class DaoTest : DaoBase, IDaoEntity
 
     public DaoTest()
     {
-        TableName = DataTableNames.TEST;
+        TableName = DataTableNames.Test;
         PrimaryKeyName = "id";
     }
 

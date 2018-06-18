@@ -5,7 +5,7 @@ using System;
 
 public class DaoBase : IDaoBase
 {
-    #region [public enums]
+    #region [ public enums ]
 
     public enum QueryTypes
     {
@@ -21,33 +21,33 @@ public class DaoBase : IDaoBase
     public enum DataTableNames
     {
         //BioIntranet
-        AREA,
-        DOCUMENTO,
-        NOTICIA,
-        DEPARTAMENTO,
-        IMAGEN,
-        SECCION,
-        AVISO,
+        Area,
+        Documento,
+        Noticia,
+        Departamento,
+        Imagen,
+        Seccion,
+        Aviso,
 
         //Gestor Examenes Online
-        CATEGORY,
-        CENTER,
-        CONTACT,
-        CONVOCATION,
-        LITERALES,
-        LOG,
-        PREGUNTA,
-        PRODUCTO,
-        RESPUESTA,
-        TEST,
-        USER_ALUMNO,
-        USER_PRODUCTO,
-        USUARIO_GESTOR 
+        Category,
+        Center,
+        Contact,
+        Convocation,
+        Literales,
+        Log,
+        Pregunta,
+        Producto,
+        Respuesta,
+        Test,
+        User_Alumno,
+        User_Producto,
+        Usuario_Gestor 
     };
 
     #endregion
     
-    #region [public properties]
+    #region [ public properties ]
 
     public Type ModelClass { get; set; }
 
@@ -77,7 +77,7 @@ public class DaoBase : IDaoBase
 
     #endregion
 
-    #region [public methods]
+    #region [ public methods ]
 
     public MySqlConnection ExecuteDataReader(QueryTypes pQueryType)
     {
@@ -147,7 +147,7 @@ public class DaoBase : IDaoBase
         var propertyName = ModelClass.GetProperties()[fieldIndex].Name;
         Model.GetType().GetProperty(propertyName).SetValue(Model, fieldValue);
     }
-    public List<ModelDataBaseField> FillFielsListFromDataTable()
+    protected List<ModelDataBaseField> FillFielsListFromDataTable()
     {
         string sqlQuery = $" SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = '{TableName}'";
         MySqlConnection cnn = new MySqlConnection(Settings.Default.Connection_qsg265);
@@ -180,9 +180,9 @@ public class DaoBase : IDaoBase
     
     #endregion
 
-    #region [privates]
+    #region [ privates ]
 
-    #region [private properties]
+    #region [ private properties ]
 
     private string ConnectionString
     {
@@ -200,7 +200,7 @@ public class DaoBase : IDaoBase
 
     #endregion
 
-    #region [private methods]
+    #region [ private methods ]
 
     private void AddParametersToCommand()
     {

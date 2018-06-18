@@ -7,7 +7,7 @@ public class DaoArea : DaoBase, IDaoEntity
 
     public DaoArea()
     {
-        TableName = DataTableNames.AREA;
+        TableName = DataTableNames.Area;
         PrimaryKeyName = "id";
     }
 

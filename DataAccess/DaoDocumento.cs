@@ -7,7 +7,7 @@ public class DaoDocumento : DaoBase, IDaoEntity
 
     public DaoDocumento(Type modelClass)
     {
-        TableName = DataTableNames.DOCUMENTO;
+        TableName = DataTableNames.Documento;
         ModelClass = modelClass;
         PrimaryKeyName = "id";
     }

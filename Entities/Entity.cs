@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class EntityUsuarioAlumno : IEntity
+public class Entity : IEntity
 {
-    #region [ properties ]
-
-    public IDaoEntity DaoEntity { get; set; }
-
-    #endregion
-
     #region [ ctors. ]
 
-    public EntityUsuarioAlumno(BussinesTypedObject TypedBO)
+    public Entity(BussinesTypedObject TypedBO)
     {
         DaoEntity = (IDaoEntity)Activator.CreateInstance(TypedBO.DataLayerType, args: TypedBO);
     }
 
     #endregion
 
+    #region [ public properties ]
+
+    public IDaoEntity DaoEntity { get; set; }
+
+    #endregion
+     
     #region [ public methods ]
 
     public IModel GetByPrimaryKey(int pKValue) => DaoEntity.GetByPrimaryKey(pKValue);

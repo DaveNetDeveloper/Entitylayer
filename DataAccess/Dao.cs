@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using static BussinesTypedObject;
 
 public class Dao : DaoBase, IDaoEntity
 {
     #region [ ctors. ]
 
-    public Dao(BussinesTypedObject TypedBO) => InitializeData(TypedBO.ModelLayerType, TypedBO.DataTableName);
+    public Dao(BussinesTypedObject TypedBO) {
+        InitializeData(TypedBO.ModelLayerType, TypedBO.DataTableName);
+    }
 
-    #endregion 
+    #endregion
 
     #region [ public methods ]
 
@@ -25,16 +28,8 @@ public class Dao : DaoBase, IDaoEntity
                         SetFieldValueIntoModel(fieldIndex, fieldType);
                     }
                 }
-            } 
-            #region [GetByForeignKey]
-
-            //((ModelUsuarioAlumno)Model).Productos = GetByForeignKey(pKValue);
-            // Aqui mirar la nueva propiedad ListOf ForeignKey Field (que contiene el nombre de las tablas relacinadas) y a traves de la
-            // propiedad "primaryKeyName" del DAO que sea, sabré el campo primaryKey para filtrar la entidad foranea 
-            // Hacer metodo que llame al "SelectByPrimaryKey" de cada DAO que aparezca en la lista de Tablas foraneas
-            // y asigne la entidad devuelta a la propiedad foranea en el modelo actual 
-
-            #endregion
+            }
+            FillDataRelationsByForeignKey();
         }
         catch (Exception ex) {
             throw ex;
@@ -114,15 +109,12 @@ public class Dao : DaoBase, IDaoEntity
 
     #region [ private methods ]
 
-    private void GetByForeignKey(int pKValue)
-    { 
-
-    }
     private void InitializeData(Type modelClass, DataTableNames dataTableName)
     {
         ModelClass = modelClass;
         TableName = dataTableName;
-        FillFielsListFromDataTable();
+        GetFielsDefinitionList();
+        GetForeingKeysDefinitionList();
     }
 
     #endregion

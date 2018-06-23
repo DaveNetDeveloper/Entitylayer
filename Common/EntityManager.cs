@@ -1,55 +1,82 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
+using static BussinesTypedObject;
 
 public class EntityManager
 {
     #region [ ctors. ]
 
-    public EntityManager() {
+    public EntityManager(ProyectNameEnum ProyectName) {
+         
+    }
+     
+    //Aqui consultar el proyecto para poder crear la instancia de la enum que toque para el tipo de negocio (esto implica la enum de nombres de tablas de BD)
+    public EntityManager(BussinesObjectTypeEnum bussinesObject, ProyectNameEnum ProyectName) {
+        InitializeTypes(bussinesObject, ProyectName);
     }
 
     #endregion 
 
     #region [ properties ]
 
-    private BussinesTypedObject _typedBO;
-    public BussinesTypedObject TypedBO => _typedBO;
+    public BussinesTypedObject TypedBO;
+    public MySqlConnection DbConnection; //Pendiente usar desde dao, para decidir la base de datos desde presentacion mediante el objeto de negocio
 
     #endregion
 
     #region [ public methods ]
 
-    public IEntity GetEntity() => (IEntity)Activator.CreateInstance(_typedBO.BussinesLayerType, args: _typedBO);
-    public IModel GetModel() => (IModel)Activator.CreateInstance(_typedBO.ModelLayerType);
-
-    public void InitializeTypes(BussinesTypedObject.BussinesObjectTypeEnum bussinesObject)
+    public IEntity GetEntity() {
+        return (IEntity)Activator.CreateInstance(TypedBO.BussinesLayerType, args: TypedBO);
+    }
+    public IModel GetModel() {
+        return (IModel)Activator.CreateInstance(TypedBO.ModelLayerType);
+    }
+    public IDaoEntity GetDAO()
     {
-        _typedBO = new BussinesTypedObject();
-        switch (bussinesObject)
-        {
-            case BussinesTypedObject.BussinesObjectTypeEnum.UsuarioAlumno:
-                //_typedBO.BussinesLayerType = typeof(EntityUsuarioAlumno);
-                _typedBO.ModelLayerType = typeof(ModelUsuarioAlumno);
-                //_typedBO.DataLayerType = typeof(DaoUsuarioAlumno);
-                _typedBO.DataTableName = DaoBase.DataTableNames.User_Alumno;
+        return (IDaoEntity)Activator.CreateInstance(TypedBO.DataLayerType, args: TypedBO);
+    }
+     
+    public void InitializeTypes(BussinesObjectTypeEnum bussinesObject, ProyectNameEnum ProyectName) {
+
+        TypedBO = new BussinesTypedObject {
+            BussinesLayerType = typeof(Entity),
+            DataLayerType = typeof(Dao)
+        };
+
+        switch (bussinesObject) {
+            case BussinesObjectTypeEnum.UsuarioAlumno:
+                TypedBO.ModelLayerType = typeof(ModelUsuarioAlumno);
+                
+                //TypedBO.DataTableName = DataTableNames.User_Alumno;
+
+                //MasterManagerDataTableNames
+                //BioIntranetDataTableNames
+
+                TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), "User_Alumno");
+                
+                //BOTMasterManagerEnum
+                //BOTBioIntranet
                 break;
 
-            case BussinesTypedObject.BussinesObjectTypeEnum.Documento:
-                //_typedBO.BussinesLayerType = typeof(EntityDocumento);
-                _typedBO.ModelLayerType = typeof(ModelDocumento);
-                //_typedBO.DataLayerType = typeof(DaoDocumento);
-                _typedBO.DataTableName = DaoBase.DataTableNames.Documento;
+            case BussinesObjectTypeEnum.Documento:
+                TypedBO.ModelLayerType = typeof(ModelDocumento);
+                
+                //TypedBO.DataTableName = DataTableNames.Documento;
+                TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), bussinesObject.ToString());
                 break;
         }
 
-        _typedBO.BussinesLayerType = typeof(Entity);
-        _typedBO.DataLayerType = typeof(Dao);
+        switch(ProyectName) {
+            case ProyectNameEnum.BioIntranet:
+                DbConnection = new MySqlConnection("database=qsg265; data source=localhost;user id=dbUser;password=123;persistsecurityinfo=true;sslMode=none;");
+                break;
+
+            case ProyectNameEnum.MasterManager:
+                DbConnection = new MySqlConnection("database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;");
+                break;
+        }
     }
-
-    #endregion 
-
-    #region [ private methods ]
-
-    private IDaoEntity GetDAO() => (IDaoEntity)Activator.CreateInstance(_typedBO.DataLayerType, args: _typedBO);
 
     #endregion
 

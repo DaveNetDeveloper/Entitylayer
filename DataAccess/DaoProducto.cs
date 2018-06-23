@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using static BussinesTypedObject;
 
 public class DaoProducto : DaoBase, IDaoEntity
 {
@@ -9,7 +10,7 @@ public class DaoProducto : DaoBase, IDaoEntity
     {
         TableName = DataTableNames.Producto;
         PrimaryKeyName = "id";
-        ForeignkeyName = "category_id";
+        //ForeignkeyName = "category_id";
     }
 
     #endregion

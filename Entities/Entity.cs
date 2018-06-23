@@ -40,12 +40,14 @@ public class Entity : IEntity
     #endregion
 
     //TODO: Por implementar (llamar desde UI después de hacer la validación en el guardar(edit o create))
-    //public bool ExistByPrimaryKey(IModel model)
-    //{
-    //bool exist;
+    public bool ExistByPrimaryKey(IModel model)
+    {
+        bool exist = false;
 
-    //Consulta en la base de datos por la existencia de alguna fila con las PK informadas a través del modelo
+        //Consulta en la base de datos por la existencia de alguna fila con las PK informadas a través del modelo
 
-    //return exist;
-    //}
+        return exist;
+    }
+
+    
 }

@@ -1,7 +1,6 @@
-﻿using EntityLayer;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System.Collections.Generic;
-using System;
+using System; 
 
 public class DaoBase : IDaoBase
 {
@@ -17,40 +16,13 @@ public class DaoBase : IDaoBase
         Create,
         SelectNextPrimaryKey,
         Custom
-    };  
-    public enum DataTableNames
-    {
-        //BioIntranet
-        Area,
-        Documento,
-        Noticia,
-        Departamento,
-        Imagen,
-        Seccion,
-        Aviso,
-
-        //Gestor Examenes Online
-        Category,
-        Center,
-        Contact,
-        Convocation,
-        Literales,
-        Log,
-        Pregunta,
-        Producto,
-        Respuesta,
-        Test,
-        User_Alumno,
-        User_Producto,
-        Usuario_Gestor 
     };
 
     #endregion
-    
+
     #region [ public properties ]
 
     public Type ModelClass { get; set; }
-
     private IModel _model;
     public IModel Model
     {
@@ -63,9 +35,9 @@ public class DaoBase : IDaoBase
         }
     }
     public List<IModel> ModelList { get; set; } 
-    public DataTableNames TableName { get; set; } 
+    public BussinesTypedObject.DataTableNames TableName { get; set; } 
     public string PrimaryKeyName { get; set; }
-    public string ForeignkeyName { get; set; }
+    public List<string> ForeignkeysNames { get; set; }
     public QueryTypes QueryType { get; set; }
     public String QuerySql { get; set; }
     public MySqlCommand Command { get; set; }
@@ -74,6 +46,7 @@ public class DaoBase : IDaoBase
     public List<MySqlParameter> MySqlParametersList { get; set; }
     public int NextPrimaryKey { get; set; }
     public List<ModelDataBaseField> FieldsList { get; set; }
+    public List<ModelDataBaseFKRelation> FKRelationsList { get; set; }
 
     #endregion
 
@@ -147,21 +120,26 @@ public class DaoBase : IDaoBase
         var propertyName = ModelClass.GetProperties()[fieldIndex].Name;
         Model.GetType().GetProperty(propertyName).SetValue(Model, fieldValue);
     }
-    protected List<ModelDataBaseField> FillFielsListFromDataTable()
+
+    protected List<ModelDataBaseField> GetFielsDefinitionList()
     {
-        string sqlQuery = $" SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = '{TableName}'";
-        MySqlConnection cnn = new MySqlConnection(Settings.Default.Connection_qsg265);
+        string sqlQuery = $"SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = '{TableName}'";
+        MySqlConnection cnn = new MySqlConnection(ConnectionString);
         MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
         cnn.Open();
         MySqlDataReader DataReader = mc.ExecuteReader();
 
-        FieldsList = new List<ModelDataBaseField>();
         if (!DataReader.IsClosed) {
-            
-            while (DataReader.Read())
-            {
+
+            ForeignkeysNames = new List<string>();
+            FieldsList = new List<ModelDataBaseField>();
+
+            while (DataReader.Read()) {
                 if(DataReader.GetString(5).ToUpper().Equals("PRI")) {
                     PrimaryKeyName = String.IsNullOrEmpty(PrimaryKeyName) ? DataReader.GetString(1) : $"{PrimaryKeyName},{DataReader.GetString(1)}";
+                }
+                else if (DataReader.GetString(5).ToUpper().Equals("MUL")) {
+                    ForeignkeysNames.Add(DataReader.GetString(1));
                 }
 
                 FieldsList.Add (
@@ -177,13 +155,84 @@ public class DaoBase : IDaoBase
         } cnn.Close();
         return FieldsList;
     }
-    
+    protected void FillDataRelationsByForeignKey()
+    {
+        string sqlQuery = string.Empty;
+        foreach (string fkColumnName in ForeignkeysNames) {
+            if (FKRelationsList[0].COLUMN_NAME.Equals(fkColumnName)) {
+                var modelFkValue = Model.GetType().GetProperty(fkColumnName).GetValue(Model);
+                sqlQuery = $"SELECT * FROM {FKRelationsList[0].REFERENCED_TABLE_NAME} WHERE {FKRelationsList[0].REFERENCED_COLUMN_NAME} = {modelFkValue}";
+            } 
+        }
+       
+        MySqlConnection cnn = new MySqlConnection(ConnectionString);
+        MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
+        cnn.Open();
+        MySqlDataReader DataReader = mc.ExecuteReader();
+
+        if (!DataReader.IsClosed) {
+            while (DataReader.Read()) {
+
+                //TODO: Implementar Binding entre la propiedad que contiene el ID (usada para buscar la entidad) y la propiedad tipo [Model] que contiene el modelo que 
+                // acabamos de recoger/rellenar para evitar la dependecia del tipo de clase aquí (ModelRol)
+                // trabajar con la interface IModel
+
+                // Crear objeto de tipo Type() a partir del nombre String "Model" + [FKRelationsList[0].REFERENCED_TABLE_NAME]
+                // Con el tipo creado, mediante reflexion instanciamos objeto del tipo para luego asignarle los valores
+                // asignamos este obeto a la propiedad del mismo tipo y con nombre [FKRelationsList[0].REFERENCED_TABLE_NAME]
+
+                //IModel model = null;  
+                 
+                for(int fieldIndex = 0; fieldIndex < DataReader.FieldCount; fieldIndex++) {
+                    DataReader.GetValue(fieldIndex);
+                }
+
+                ModelRol modelRol = new ModelRol {
+                    // acceder a estas propiedades a atraves de la coleccion de propiedades Model.GetType().GetProperties() en el mismo orden que las fias del DataReader 
+                    // en el bucle anterior
+
+                    Id = DataReader.GetInt32(0),
+                    Name = DataReader.GetString(1)
+                };
+
+                var ModelPropertyName = FKRelationsList[0].REFERENCED_TABLE_NAME;
+                Model.GetType().GetProperty(ModelPropertyName).SetValue(Model, modelRol);
+            }
+        }
+        cnn.Close();
+    }
+    protected List<ModelDataBaseFKRelation> GetForeingKeysDefinitionList()
+    {
+        string sqlQuery = $"SELECT COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{TableName}' AND CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_COLUMN_NAME IS NOT NULL AND REFERENCED_TABLE_NAME IS NOT NULL";
+        MySqlConnection cnn = new MySqlConnection(ConnectionString);
+        MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
+        cnn.Open();
+        MySqlDataReader DataReader = mc.ExecuteReader();
+
+        FieldsList = new List<ModelDataBaseField>();
+        if (!DataReader.IsClosed) 
+        {
+            FKRelationsList = new List<ModelDataBaseFKRelation>();
+            while (DataReader.Read()) {
+                FKRelationsList.Add(
+                    new ModelDataBaseFKRelation() {
+                        COLUMN_NAME = DataReader.GetString(0),
+                        CONSTRAINT_NAME = DataReader.GetString(1),
+                        REFERENCED_TABLE_NAME= DataReader.GetString(2),
+                        REFERENCED_COLUMN_NAME = DataReader.GetString(3)
+                    });
+            }
+        }
+        cnn.Close();
+        return FKRelationsList;
+    }
     #endregion
 
     #region [ privates ]
 
     #region [ private properties ]
 
+    //depends of ProyectName
     private string ConnectionString
     {
         get {
@@ -214,11 +263,11 @@ public class DaoBase : IDaoBase
         //DbConnection = new MySqlConnection(Connection_biointranet);
         DbConnection = new MySqlConnection(ConnectionString);
         Command = new MySqlCommand { Connection = DbConnection }; 
-        Command.CommandText = GetSqlByQueryType().Replace("@TableName", TableName.ToString()); 
+        Command.CommandText = GetSqlQueryByType().Replace("@TableName", TableName.ToString()); 
         AddParametersToCommand(); 
         DbConnection.Open();
     }
-    private string GetSqlByQueryType()
+    private string GetSqlQueryByType()
     {
         switch (QueryType) {
             case QueryTypes.SelectAll:

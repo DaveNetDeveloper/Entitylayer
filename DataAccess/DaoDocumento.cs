@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using static BussinesTypedObject;
 
 public class DaoDocumento : DaoBase, IDaoEntity
 {

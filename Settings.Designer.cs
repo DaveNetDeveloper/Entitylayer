@@ -22,15 +22,5 @@ namespace EntityLayer {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("database=biointranet; data source=localhost; user id=dbUser; password=123; persis" +
-            "tsecurityinfo=true; sslMode=none;")]
-        public string Connection_qsg265 {
-            get {
-                return ((string)(this["Connection_qsg265"]));
-            }
-        }
     }
 }

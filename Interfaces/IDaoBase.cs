@@ -5,9 +5,9 @@ public interface IDaoBase
 {
     #region [ properties ]
 
-    DaoBase.DataTableNames TableName { get; set; } 
+    BussinesTypedObject.DataTableNames TableName { get; set; } 
     string PrimaryKeyName { get; set; }
-    string ForeignkeyName { get; set; }
+    //string ForeignkeyName { get; set; }
     int NextPrimaryKey { get; set; }
     string QuerySql { get; set; }
     MySqlDataReader DrData { get; set; }

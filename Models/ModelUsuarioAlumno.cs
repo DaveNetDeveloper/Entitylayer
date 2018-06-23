@@ -47,5 +47,13 @@ public class ModelUsuarioAlumno : IModel
     public DateTime Created { get; set; }
     public DateTime Updated { get; set; }
     public int Phone { get; set; }
+
+    public int idrol { get; set; }
+    public int idusuariogestor { get; set; }
+
+    //Bindings
+    public ModelRol rol { get; set; }
+    public ModelUsuarioGestor usuario_gestor { get; set; }
+
     //public IEnumerable<IModel> Productos { get; set; }
 }

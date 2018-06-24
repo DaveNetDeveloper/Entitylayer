@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BussinesTypedObject;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -18,7 +19,7 @@ public class Dao : DaoBase, IDaoEntity
 
     #endregion
 
-    #region [ public methods ]
+    #region [ methods ]
 
     public IModel GetByPrimaryKey(int pKValue)
     {
@@ -30,7 +31,7 @@ public class Dao : DaoBase, IDaoEntity
                 while (DrData.Read()) {
                     for (int fieldIndex = 0; fieldIndex < DrData.FieldCount; fieldIndex++) {
                         var fieldType = DrData.GetFieldType(fieldIndex);
-                        SetFieldValueIntoModel(fieldIndex, fieldType);
+                        SetTypedFieldValueIntoModel(fieldIndex, fieldType);
                     }
                 }
             }
@@ -56,7 +57,7 @@ public class Dao : DaoBase, IDaoEntity
                 Model = (IModel)Activator.CreateInstance(ModelClass);
                 for (int fieldIndex = 0; fieldIndex < DrData.FieldCount; fieldIndex++) {
                     var fieldType = DrData.GetFieldType(fieldIndex);
-                    SetFieldValueIntoModel(fieldIndex, fieldType); 
+                    SetTypedFieldValueIntoModel(fieldIndex, fieldType); 
                 }
                 ModelList.Add(Model);
             }
@@ -96,6 +97,27 @@ public class Dao : DaoBase, IDaoEntity
         //QueryTypes.UpdateByPrimaryKey
         return true;
     }
+    public bool ExistByPrimaryKey(int pKValue)
+    {
+        try
+        {
+            AddNewParameter(PrimaryKeyName, pKValue);
+            DbConnection = ExecuteDataReader(QueryTypes.ExistByPrimary);
+            if (!DrData.IsClosed)
+            {
+                while (DrData.Read())
+                {
+                    return DrData.GetInt32(0) > 0;
+                }
+            }
+            return false;
+        }
+        finally
+        {
+            DbConnection.Close();
+            if (MySqlParametersList != null) MySqlParametersList.Clear();
+        }
+    }
     public int GetNextPrimaryKey()
     {
         DbConnection = ExecuteDataReader(QueryTypes.SelectNextPrimaryKey);
@@ -109,23 +131,6 @@ public class Dao : DaoBase, IDaoEntity
         if(MySqlParametersList != null) MySqlParametersList.Clear();
         return NextPrimaryKey; 
     }  
-    public bool ExistByPrimaryKey(int pKValue)
-    {
-        try {
-            AddNewParameter(PrimaryKeyName, pKValue);
-            DbConnection = ExecuteDataReader(QueryTypes.ExistByPrimary);
-            if (!DrData.IsClosed) {
-                while (DrData.Read()) {
-                    return DrData.GetInt32(0) > 0;
-                }
-            } return false;
-        }
-        finally {
-            DbConnection.Close();
-            if (MySqlParametersList != null) MySqlParametersList.Clear();
-        }
-    } 
-
+     
     #endregion
-
 }

@@ -1,6 +1,7 @@
-﻿using MySql.Data.MySqlClient;
-using System;
-using static BussinesTypes;
+﻿using System;
+using MySql.Data.MySqlClient; 
+using BussinesTypedObject;
+using static BussinesTypedObject.BussinesTypes;
 
 public class EntityManager
 {
@@ -22,7 +23,7 @@ public class EntityManager
 
     #endregion
 
-    #region [ public methods ]
+    #region [ methods ]
 
     public IEntity GetEntity() {
         return (IEntity)Activator.CreateInstance(TypedBO.BussinesLayerType, args: TypedBO);
@@ -34,11 +35,9 @@ public class EntityManager
     {
         return (IDaoEntity)Activator.CreateInstance(TypedBO.DataLayerType, args: TypedBO);
     }
-     
     public void InitializeTypes(BussinesObjectTypeEnum bussinesObject, ProyectNameEnum ProyectName) {
 
-        TypedBO = new BussinesTypes
-        {
+        TypedBO = new BussinesTypes {
             BussinesLayerType = typeof(Entity),
             DataLayerType = typeof(Dao)
         };

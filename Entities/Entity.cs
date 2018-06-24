@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BussinesTypedObject;
 
 public class Entity : IEntity
 {
@@ -11,13 +12,13 @@ public class Entity : IEntity
 
     #endregion
 
-    #region [ public properties ]
+    #region [ properties ]
 
     public IDaoEntity DaoEntity { get; set; }
 
     #endregion
      
-    #region [ public methods ]
+    #region [ methods ]
 
     public IModel GetByPrimaryKey(int pKValue) => DaoEntity.GetByPrimaryKey(pKValue);
     public IEnumerable<IModel> GetList() => DaoEntity.GetList();
@@ -32,6 +33,5 @@ public class Entity : IEntity
     public bool ExistByPrimaryKey(int pKValue) => DaoEntity.ExistByPrimaryKey(pKValue);
     public int GetNextPrimaryKey() => DaoEntity.GetNextPrimaryKey();
 
-    #endregion
-
+    #endregion 
 }

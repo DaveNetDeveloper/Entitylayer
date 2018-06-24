@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Runtime.Remoting;
 using System.Reflection;
-using static BussinesTypes;
+using BussinesTypedObject;
 
 public class DaoBase
 {
@@ -16,8 +16,8 @@ public class DaoBase
     private const string entityLiteral = "Entity";
     private const string daoLiteral = "Dao";
 
-    private string ConnectionString => "database = qsg265; data source = localhost; user id = dbUser; password = 123; persistsecurityinfo = true; sslMode = none;";
-    private string Connection_biointranet => "database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;";
+    private const string ConnectionString = "database = qsg265; data source = localhost; user id = dbUser; password = 123; persistsecurityinfo = true; sslMode = none;";
+    private const string Connection_biointranet = "database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;";
 
     #endregion
 
@@ -53,7 +53,7 @@ public class DaoBase
         }
     }
     protected List<IModel> ModelList { get; set; }
-    protected DataTableNames TableName { get; set; }
+    protected BussinesTypes.DataTableNames TableName { get; set; }
     protected string PrimaryKeyName { get; set; }
     protected List<string> ForeignkeysNames { get; set; }
     protected QueryTypes QueryType { get; set; }
@@ -108,7 +108,7 @@ public class DaoBase
         if (null == MySqlParametersList) MySqlParametersList = new List<MySqlParameter>();
         MySqlParametersList.Add(new MySqlParameter(nombreParam, value));
     }
-    protected void SetFieldValueIntoModel(int fieldIndex, Type fieldType)
+    protected void SetTypedFieldValueIntoModel(int fieldIndex, Type fieldType)
     {
         Object fieldValue;
         switch (fieldType.Name) {
@@ -237,7 +237,7 @@ public class DaoBase
         }
         cnn.Close();
     }
-    protected void InitializeData(Type modelClass, DataTableNames dataTableName)
+    protected void InitializeData(Type modelClass, BussinesTypes.DataTableNames dataTableName)
     {
         ModelClass = modelClass;
         TableName = dataTableName;

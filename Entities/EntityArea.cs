@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class EntityArea : IEntity
+public class EntityArea 
 {
     public IDaoEntity DaoEntity { get; set; }
 

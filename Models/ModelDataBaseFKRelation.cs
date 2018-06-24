@@ -5,8 +5,8 @@
     }
 
     //public string TABLE_NAME { get; set; }
-    public string COLUMN_NAME { get; set; }
-    public string CONSTRAINT_NAME { get; set; }
-    public string REFERENCED_TABLE_NAME { get; set; }
-    public string REFERENCED_COLUMN_NAME { get; set; }
+    public string ColumnName { get; set; }
+    public string ConstraintName { get; set; }
+    public string Referenced_TableName { get; set; }
+    public string Referenced_ColumnName { get; set; }
 }

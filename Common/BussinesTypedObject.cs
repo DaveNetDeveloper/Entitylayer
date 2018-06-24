@@ -1,6 +1,6 @@
 ﻿using System; 
 
-public class BussinesTypedObject
+public class BussinesTypes
 {
     #region [ Enums ]
 
@@ -16,18 +16,18 @@ public class BussinesTypedObject
         UsuarioGestor,
         Documento
     } 
-    public enum BOTMasterManagerEnum
-    {
-        UsuarioAlumno,
-        UsuarioGestor,
-        Documento
-    }
-    public enum BOTBioIntranet
-    {
-        UsuarioAlumno,
-        UsuarioGestor,
-        Documento
-    }
+    //public enum BOTMasterManagerEnum
+    //{
+    //    UsuarioAlumno,
+    //    UsuarioGestor,
+    //    Documento
+    //}
+    //public enum BOTBioIntranet
+    //{
+    //    UsuarioAlumno,
+    //    UsuarioGestor,
+    //    Documento
+    //}
 
     public enum DataTableNames
     {
@@ -58,36 +58,36 @@ public class BussinesTypedObject
         User_Producto,
         Usuario_Gestor
     }; 
-    public enum BioIntranetDataTableNames
-    {
-        Area,
-        Documento,
-        Noticia,
-        Departamento,
-        Imagen,
-        Seccion,
-        Aviso,
-        Empleado,
-        Rol,
-        Usuario,
-        Log
-    }; 
-    public enum MasterManagerDataTableNames
-    {
-        Category,
-        Center,
-        Contact,
-        Convocation,
-        Literales,
-        Log,
-        Pregunta,
-        Producto,
-        Respuesta,
-        Test,
-        User_Alumno,
-        User_Producto,
-        Usuario_Gestor
-    };
+    //public enum BioIntranetDataTableNames
+    //{
+    //    Area,
+    //    Documento,
+    //    Noticia,
+    //    Departamento,
+    //    Imagen,
+    //    Seccion,
+    //    Aviso,
+    //    Empleado,
+    //    Rol,
+    //    Usuario,
+    //    Log
+    //}; 
+    //public enum MasterManagerDataTableNames
+    //{
+    //    Category,
+    //    Center,
+    //    Contact,
+    //    Convocation,
+    //    Literales,
+    //    Log,
+    //    Pregunta,
+    //    Producto,
+    //    Respuesta,
+    //    Test,
+    //    User_Alumno,
+    //    User_Producto,
+    //    Usuario_Gestor
+    //};
 
     #endregion
 
@@ -96,7 +96,6 @@ public class BussinesTypedObject
     public Type BussinesLayerType;
     public Type DataLayerType;
     public Type ModelLayerType;
-
     public DataTableNames DataTableName;
 
     #endregion 

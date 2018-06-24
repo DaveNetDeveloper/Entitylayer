@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class EntityDocumento : IEntity
+public class EntityDocumento 
 {
     public IDaoEntity DaoEntity { get; set; }
 

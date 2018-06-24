@@ -10,6 +10,5 @@ public interface IEntity
     bool Insert(IModel model);
     bool UpdateByPrimaryKey(int pKValue, string nombre);
     bool UpdateByPrimaryKey(IModel model);
-
-    //bool ExistByPrimaryKey(IModel model);
+    bool ExistByPrimaryKey(int pKValue);
 }

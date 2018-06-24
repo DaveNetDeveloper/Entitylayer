@@ -5,8 +5,7 @@ public class Entity : IEntity
 {
     #region [ ctors. ]
 
-    public Entity(BussinesTypedObject TypedBO)
-    {
+    public Entity(BussinesTypes TypedBO) {
         DaoEntity = (IDaoEntity)Activator.CreateInstance(TypedBO.DataLayerType, args: TypedBO);
     }
 
@@ -30,24 +29,9 @@ public class Entity : IEntity
     }
     public bool UpdateByPrimaryKey(int pKValue, string nombre) => DaoEntity.UpdateByPrimaryKey(pKValue, nombre);
     public bool UpdateByPrimaryKey(IModel model) => DaoEntity.UpdateByPrimaryKey(model);
+    public bool ExistByPrimaryKey(int pKValue) => DaoEntity.ExistByPrimaryKey(pKValue);
+    public int GetNextPrimaryKey() => DaoEntity.GetNextPrimaryKey();
 
     #endregion
 
-    #region [ private methods ]
-
-    private int GetNextPrimaryKey() => DaoEntity.GetNextPrimaryKey();
-
-    #endregion
-
-    //TODO: Por implementar (llamar desde UI después de hacer la validación en el guardar(edit o create))
-    public bool ExistByPrimaryKey(IModel model)
-    {
-        bool exist = false;
-
-        //Consulta en la base de datos por la existencia de alguna fila con las PK informadas a través del modelo
-
-        return exist;
-    }
-
-    
 }

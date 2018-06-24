@@ -11,5 +11,6 @@ public interface IDaoEntity
     bool Insert(IModel model);
     bool UpdateByPrimaryKey(int pKValue, string nombre);
     bool UpdateByPrimaryKey(IModel model);
-    int GetNextPrimaryKey(); 
+    int GetNextPrimaryKey();
+    bool ExistByPrimaryKey(int pKValue);
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class EntityTest : IEntity
+public class EntityTest 
 {
     public IDaoEntity DaoEntity { get; set; }
 

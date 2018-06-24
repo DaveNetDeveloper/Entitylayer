@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using static BussinesTypedObject;
 
 public class Dao : DaoBase, IDaoEntity
 {
     #region [ ctors. ]
 
-    public Dao(BussinesTypedObject TypedBO) {
+    public Dao(BussinesTypes TypedBO) {
         InitializeData(TypedBO.ModelLayerType, TypedBO.DataTableName);
     }
+
+    #endregion
+
+    #region [ properties ]
+
+    public int NextPrimaryKey { get; set; }
 
     #endregion
 
@@ -29,7 +34,7 @@ public class Dao : DaoBase, IDaoEntity
                     }
                 }
             }
-            FillDataRelationsByForeignKey();
+            FillDataRelationsByForeignKeys();
         }
         catch (Exception ex) {
             throw ex;
@@ -104,18 +109,23 @@ public class Dao : DaoBase, IDaoEntity
         if(MySqlParametersList != null) MySqlParametersList.Clear();
         return NextPrimaryKey; 
     }  
-
-    #endregion
-
-    #region [ private methods ]
-
-    private void InitializeData(Type modelClass, DataTableNames dataTableName)
+    public bool ExistByPrimaryKey(int pKValue)
     {
-        ModelClass = modelClass;
-        TableName = dataTableName;
-        GetFielsDefinitionList();
-        GetForeingKeysDefinitionList();
-    }
+        try {
+            AddNewParameter(PrimaryKeyName, pKValue);
+            DbConnection = ExecuteDataReader(QueryTypes.ExistByPrimary);
+            if (!DrData.IsClosed) {
+                while (DrData.Read()) {
+                    return DrData.GetInt32(0) > 0;
+                }
+            } return false;
+        }
+        finally {
+            DbConnection.Close();
+            if (MySqlParametersList != null) MySqlParametersList.Clear();
+        }
+    } 
 
     #endregion
+
 }

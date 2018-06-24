@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using static BussinesTypedObject;
+using static BussinesTypes;
 
-public class DaoDocumento : DaoBase, IDaoEntity
+public class DaoDocumento : DaoBase
 {
     #region [ ctors. ]
 

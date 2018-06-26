@@ -1,5 +1,5 @@
 ﻿ 
-public class ModelRespuesta : IModel
+public class ModelRespuesta : ModelBase, IModel
 {
     public ModelRespuesta() { }
 

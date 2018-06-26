@@ -1,6 +1,6 @@
 ﻿
  
-public class ModelDepartamento : IModel
+public class ModelDepartamento : ModelBase, IModel
 {
     #region [ ctors. ]
 

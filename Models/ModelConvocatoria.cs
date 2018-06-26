@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-public class ModelConvocatoria : IModel
+public class ModelConvocatoria : ModelBase, IModel
 {
     public ModelConvocatoria() { }
 

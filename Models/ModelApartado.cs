@@ -1,5 +1,5 @@
 ﻿ 
-public class ModelApartado : IModel
+public class ModelApartado : ModelBase, IModel
 {
     #region [ ctors. ]
 

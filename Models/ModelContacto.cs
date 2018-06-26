@@ -1,6 +1,6 @@
 ﻿using System; 
  
-public class ModelUserContact : IModel
+public class ModelUserContact : ModelBase, IModel
 {
     #region [ ctors. ]
 

@@ -64,9 +64,9 @@ public class DaoBase
     protected List<MySqlParameter> MySqlParametersList { get; set; } 
     protected List<ModelDataBaseField> FieldsList { get; set; }
     protected List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
-
-    private IModel _model;
+    
     private string CurrenAssembly => Assembly.GetExecutingAssembly().GetName().Name;
+    private IModel _model;
 
     #endregion
 
@@ -132,13 +132,18 @@ public class DaoBase
                 break; 
         }
 
-        if(fieldType.Equals(typeof(Int32)) & ModelClass.GetProperties()[fieldIndex].PropertyType.Equals(typeof(Boolean))) {
+        if(fieldType.Equals(typeof(Int32)) && ModelClass.GetProperties()[fieldIndex].PropertyType.Equals(typeof(Boolean))) {
             fieldValue = fieldValue.Equals(1) ? true : false;
         }
 
         var propertyName = ModelClass.GetProperties()[fieldIndex].Name;
-        Model.GetType().GetProperty(propertyName).SetValue(Model, fieldValue);
-    } 
+        var propertyTypeName = ModelClass.GetProperties()[fieldIndex].PropertyType.Name;
+
+        if (!StartsByModel(propertyTypeName)){
+            Model.GetType().GetProperty(propertyName).SetValue(Model, fieldValue);
+        }
+    }
+     
     protected List<ModelDataBaseField> GetFielsDefinitionList()
     {
         QueryType = QueryTypes.SelectFieldsDefinition;
@@ -154,6 +159,7 @@ public class DaoBase
             FieldsList = new List<ModelDataBaseField>();
 
             while (DataReader.Read()) {
+
                 if(DataReader.GetString(5).ToUpper().Equals(mySqPrimaryKey)) { 
                     PrimaryKeyName = String.IsNullOrEmpty(PrimaryKeyName) ? DataReader.GetString(1) : $"{PrimaryKeyName},{DataReader.GetString(1)}";
                 }
@@ -174,46 +180,6 @@ public class DaoBase
         } cnn.Close();
         return FieldsList;
     }
-    protected void FillDataRelationsByForeignKeys()
-    {
-        if (FkRelationsList != null && FkRelationsList.Count > 0) {
-            foreach (ModelDataBaseFKRelation fkRelation in FkRelationsList) {
-            if (IsInForeingKeyNameList(fkRelation.ColumnName)) {
-
-                string columnName = fkRelation.ColumnName;
-                string ReferencedTableName = fkRelation.Referenced_TableName;
-                string ReferencedColumnName = fkRelation.Referenced_ColumnName;
-                     
-                var modelFkValue = Model.GetType().GetProperty(columnName).GetValue(Model);
-                var sqlQuery = $"SELECT * FROM {ReferencedTableName} WHERE {ReferencedColumnName} = {modelFkValue}";
-                MySqlConnection cnn = new MySqlConnection(ConnectionString);
-                MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
-                cnn.Open();
-                MySqlDataReader DataReader = mc.ExecuteReader();
-
-                if (!DataReader.IsClosed) {
-                    while (DataReader.Read()) {
-                            
-                        ObjectHandle handle = Activator.CreateInstance(CurrenAssembly, modelLiteral + FirstToUpper(ReferencedTableName));
-                        Object ModelForeingInstance = handle.Unwrap();
-                        Type modelForeingType = ModelForeingInstance.GetType();
-
-                        for (int fieldIndex = 0; fieldIndex < DataReader.FieldCount; fieldIndex++) {
-
-                                var fieldValue = DataReader.GetValue(fieldIndex);
-                                var propertyName = modelForeingType.GetProperties()[fieldIndex].Name;
-                                ModelForeingInstance.GetType().GetProperty(propertyName).SetValue(ModelForeingInstance, fieldValue);
-                        }
-
-                        var ModelPropertyName = ReferencedTableName;
-                        Model.GetType().GetProperty(ModelPropertyName).SetValue(Model, ModelForeingInstance);
-                    }
-                }
-                cnn.Close();
-            }
-            }
-        }
-    }
     protected void GetForeingKeysDefinitionList()
     {
         QueryType = QueryTypes.SelectForeignRelationsDefinition;
@@ -221,21 +187,52 @@ public class DaoBase
         MySqlConnection cnn = new MySqlConnection(ConnectionString);
         MySqlCommand mc = new MySqlCommand(QuerySql, cnn);
         cnn.Open();
-        MySqlDataReader auxDR = mc.ExecuteReader(); 
+        MySqlDataReader auxDR = mc.ExecuteReader();
 
-        if (!auxDR.IsClosed) {
+        if (!auxDR.IsClosed)
+        {
             FkRelationsList = new List<ModelDataBaseFKRelation>();
-            while (auxDR.Read()) {
+            while (auxDR.Read())
+            {
                 FkRelationsList.Add(
-                    new ModelDataBaseFKRelation() {
+                    new ModelDataBaseFKRelation()
+                    {
                         ColumnName = auxDR.GetString(0),
                         ConstraintName = auxDR.GetString(1),
-                        Referenced_TableName= auxDR.GetString(2),
+                        Referenced_TableName = auxDR.GetString(2),
                         Referenced_ColumnName = auxDR.GetString(3)
                     });
             }
         }
         cnn.Close();
+    }
+
+    protected void FillDataRelationsByForeignKeys()
+    {
+        if (FkRelationsList != null && FkRelationsList.Count > 0) {
+            foreach (ModelDataBaseFKRelation fkRelation in FkRelationsList) {
+                if (IsInForeingKeyNameList(fkRelation.ColumnName)) {
+
+                    MySqlConnection cnn = null;
+                    MySqlDataReader DataReader = ExecuteSelectForForeingData(fkRelation, ref cnn);  
+                    if (!DataReader.IsClosed) {
+                        while (DataReader.Read()) {
+
+                            string ReferencedTableName = fkRelation.Referenced_TableName;
+                            Object ModelForeingInstance = CreateModelInstanceByName(ReferencedTableName);
+
+                            for (int fieldIndex = 0; fieldIndex < DataReader.FieldCount; fieldIndex++) {
+
+                                var fieldValue = DataReader.GetValue(fieldIndex);
+                                var propertyName = ModelForeingInstance.GetType().GetProperties()[fieldIndex].Name;
+                                ModelForeingInstance.GetType().GetProperty(propertyName).SetValue(ModelForeingInstance, fieldValue);
+                            }
+                            Model.GetType().GetProperty(ReferencedTableName).SetValue(Model, ModelForeingInstance);
+                        }
+                    } cnn.Close();
+                }
+            }
+        }
     }
     protected void InitializeData(Type modelClass, BussinesTypes.DataTableNames dataTableName)
     {
@@ -246,10 +243,24 @@ public class DaoBase
         GetForeingKeysDefinitionList();
     }
 
+    private Object CreateModelInstanceByName(string name)
+    {
+        var modelTypeOfForeingTableName = $"{modelLiteral}{TableNameTreatment(name)}";
+        ObjectHandle handle = Activator.CreateInstance(CurrenAssembly, modelTypeOfForeingTableName);
+        return handle.Unwrap();
+    }
+    private MySqlDataReader ExecuteSelectForForeingData(ModelDataBaseFKRelation fkRelation, ref MySqlConnection cnn)
+    {
+        var modelFkValue = Model.GetType().GetProperty(fkRelation.ColumnName).GetValue(Model);
+        var sqlQuery = $"SELECT * FROM {fkRelation.Referenced_TableName} WHERE {fkRelation.Referenced_ColumnName} = {modelFkValue}";
+        cnn = new MySqlConnection(ConnectionString);
+        MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
+        cnn.Open();
+        return mc.ExecuteReader();
+    }
     private bool IsInForeingKeyNameList(string fkColumnName)
     {
-        foreach (string fkName in ForeignkeysNames)
-        {
+        foreach (string fkName in ForeignkeysNames) {
             if (fkName.Equals(fkColumnName)) return true;
         }
         return false;
@@ -257,8 +268,7 @@ public class DaoBase
     private void AddParametersToCommand()
     {
         if (null != MySqlParametersList && MySqlParametersList.Count > 0)
-            foreach (var parameterItem in MySqlParametersList)
-            {
+            foreach (var parameterItem in MySqlParametersList) {
                 Command.Parameters.AddWithValue(parameterItem.ParameterName, parameterItem.Value);
             }
     }
@@ -273,8 +283,7 @@ public class DaoBase
     }
     private string GetSqlQueryByType()
     {
-        switch (QueryType)
-        {
+        switch (QueryType) {
             case QueryTypes.SelectAll:
                 QuerySql = $" SELECT * FROM @TableName ";
                 break;
@@ -291,14 +300,12 @@ public class DaoBase
                 var queryValues = string.Empty;
                 var queryNames = string.Empty;
 
-                foreach (var parameterItem in MySqlParametersList)
-                {
+                foreach (var parameterItem in MySqlParametersList) {
 
-                    queryNames += parameterItem.ParameterName + ",";
+                    queryNames += $"{parameterItem.ParameterName},";
 
                     object value = null;
-                    switch (parameterItem.MySqlDbType)
-                    {
+                    switch (parameterItem.MySqlDbType) {
                         case MySqlDbType.Byte:
                             value = ((bool)parameterItem.Value == true) ? 1 : 0;
                             break;
@@ -317,8 +324,8 @@ public class DaoBase
                 queryNames = queryNames.Remove(queryNames.LastIndexOf(","));
                 queryValues = queryValues.Remove(queryValues.LastIndexOf(","));
 
-                QuerySql += queryNames + ") VALUES(";
-                QuerySql += queryValues + ")";
+                QuerySql += $"{queryNames} ) VALUES(";
+                QuerySql += $"{queryValues} )";
                 break;
 
             case QueryTypes.DeleteByPrimary:
@@ -339,14 +346,29 @@ public class DaoBase
         }
         return QuerySql;
     }
-    private string FirstToUpper(string str)
+    private string TableNameTreatment(string str)
     {
-        if (str.Length > 1)
-            return char.ToUpper(str[0]) + str.Substring(1);
+        if (str.Length > 1){
+            var primeraMayuscula = char.ToUpper(str[0]) + str.Substring(1);
 
+            if(primeraMayuscula.Contains("_")) {
+                var posGuion = primeraMayuscula.IndexOf("_");
+                var primeraParte = primeraMayuscula.Substring(0, posGuion);
+                var segundaParte = primeraMayuscula.Substring(posGuion + 1);
+                segundaParte = char.ToUpper(segundaParte[0]) + segundaParte.Substring(1);
+                return primeraParte + segundaParte;
+            }
+            else { return primeraMayuscula; }
+        }
         return str.ToUpper();
+    }
+    private bool StartsByModel(string propertyTypeName)
+    {
+        if (propertyTypeName.Contains("Model")) {
+            return propertyTypeName.Substring(0, "Model".Length).Equals("Model");
+        }
+        return false;
     }
 
     #endregion
- 
 }

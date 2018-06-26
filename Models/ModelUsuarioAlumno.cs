@@ -1,40 +1,9 @@
 ﻿using System;
-//using System.Collections.Generic;
-
-public class ModelUsuarioAlumno : IModel
-{
-    public enum ModelFields
-    {
-        Id = 0,
-        Name = 1,
-        Surname = 2,
-        BirthDate = 3,
-        Mail = 4,
-        UserName = 5,
-        Password = 6,
-        Entered = 7,
-        Active = 8,
-        Created = 9,
-        Updated = 10,
-        Phone = 11
-    };
-
-    public ModelUsuarioAlumno() => Id = -1;
-    public ModelUsuarioAlumno(int id, string name, string surname, DateTime birthDate, string mail, string userName, string password, bool entered, bool active, int phone, DateTime created, DateTime updated)
-    {
-        Id = id;
-        Name = name;
-        Surname = surname;
-        BirthDate = birthDate;
-        UserName = UserName;
-        Password = password;
-        Entered = entered;
-        Active = active;
-        Phone = phone;
-        Created = created;
-        Updated = updated;
-    }
  
+public class ModelUsuarioAlumno : ModelBase, IModel
+{
+    public ModelUsuarioAlumno() => Id = -1;
+
     public int Id { get; set; }
     public string Name { get; set; }
     public string Surname { get; set; }
@@ -43,17 +12,14 @@ public class ModelUsuarioAlumno : IModel
     public string UserName { get; set; }
     public string Password { get; set; }
     public bool Entered { get; set; }
-    public bool Active { get; set; }
-    public DateTime Created { get; set; }
-    public DateTime Updated { get; set; }
+    public bool Active { get; set; } 
     public int Phone { get; set; }
-
-    public int idrol { get; set; }
     public int idusuariogestor { get; set; }
-
-    //Bindings
+    public int idrol { get; set; }
+     
     public ModelRol rol { get; set; }
     public ModelUsuarioGestor usuario_gestor { get; set; }
 
+    //TODO Lista de elementos foraneo -> Tabla relaciones 1-n
     //public IEnumerable<IModel> Productos { get; set; }
 }

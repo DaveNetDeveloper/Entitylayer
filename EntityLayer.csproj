@@ -55,8 +55,8 @@
     <Compile Include="Interfaces\IDaoEntity.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IModel.cs" />
-    <Compile Include="Interfaces\IWsEntity.cs" />
-    <Compile Include="Models\ModelDataBaseFKRelation.cs" />
+    <Compile Include="Base\ModelBase.cs" />
+    <Compile Include="Models\Internal\ModelDataBaseFKRelation.cs" />
     <Compile Include="Models\ModelDepartamento.cs" />
     <Compile Include="Models\ModelSeccion.cs" />
     <Compile Include="Models\ModelApartado.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="Models\ModelTest.cs" />
     <Compile Include="Models\ModelRol.cs" />
     <Compile Include="Models\ModelUsuarioAlumno.cs" />
-    <Compile Include="Models\ModelDataBaseField.cs" />
+    <Compile Include="Models\Internal\ModelDataBaseField.cs" />
     <Compile Include="Models\ModelUsuarioGestor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.Designer.cs">

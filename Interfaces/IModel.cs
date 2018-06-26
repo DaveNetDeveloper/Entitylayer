@@ -1,4 +1,8 @@
-﻿public interface IModel
+﻿using System;
+
+public interface IModel
 {
-    int Id { get; set; } 
+    int Id { get; set; }
+    DateTime Updated { get; set; }
+    DateTime Created { get; set; }
 }

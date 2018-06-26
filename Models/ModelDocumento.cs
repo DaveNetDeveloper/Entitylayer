@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class ModelDocumento : IModel
+public class ModelDocumento : ModelBase, IModel
 {
     #region [ ctors. ]
 

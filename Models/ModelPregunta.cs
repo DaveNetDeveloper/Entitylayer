@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class ModelPregunta : IModel
+public class ModelPregunta : ModelBase, IModel
 {
     public ModelPregunta() { }
 

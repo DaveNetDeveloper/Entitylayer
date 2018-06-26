@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class ModelTest : IModel
+public class ModelTest : ModelBase, IModel
 {
     #region [ ctors. ]
 

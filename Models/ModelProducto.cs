@@ -1,4 +1,4 @@
-﻿public class ModelProducto : IModel
+﻿public class ModelProducto : ModelBase, IModel
 {
     #region [ ctors. ]
 

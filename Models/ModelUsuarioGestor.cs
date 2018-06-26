@@ -1,4 +1,4 @@
-﻿public class ModelUsuarioGestor : IModel
+﻿public class ModelUsuarioGestor : ModelBase, IModel
 {
     public ModelUsuarioGestor() { }
 

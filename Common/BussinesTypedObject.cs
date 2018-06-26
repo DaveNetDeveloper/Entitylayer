@@ -6,19 +6,19 @@ namespace BussinesTypedObject
     {
         #region [ Enums ]
 
-        public enum ProyectNameEnum
+        public enum ProyectName
         {
             BioIntranet = 0,
             MasterManager = 1
         }
       
-        public enum BussinesObjectTypeEnum
+        public enum BussinesObjectType
         {
             UsuarioAlumno,
             UsuarioGestor,
             Documento
         } 
-        //public enum BOTMasterManagerEnum
+        //public enum BOTMasterManager
         //{
         //    UsuarioAlumno,
         //    UsuarioGestor,

@@ -7,10 +7,10 @@ public class EntityManager
 {
     #region [ ctors. ]
 
-    public EntityManager(ProyectNameEnum ProyectName) {
+    public EntityManager(ProyectName ProyectName) {
          
     }
-    public EntityManager(BussinesObjectTypeEnum bussinesObject, ProyectNameEnum ProyectName) {
+    public EntityManager(BussinesObjectType bussinesObject, ProyectName ProyectName) {
         InitializeTypes(bussinesObject, ProyectName);
     }
 
@@ -35,7 +35,7 @@ public class EntityManager
     {
         return (IDaoEntity)Activator.CreateInstance(TypedBO.DataLayerType, args: TypedBO);
     }
-    public void InitializeTypes(BussinesObjectTypeEnum bussinesObject, ProyectNameEnum ProyectName) {
+    public void InitializeTypes(BussinesObjectType bussinesObject, ProyectName ProyectName) {
 
         TypedBO = new BussinesTypes {
             BussinesLayerType = typeof(Entity),
@@ -43,22 +43,22 @@ public class EntityManager
         };
 
         switch (bussinesObject) {
-            case BussinesObjectTypeEnum.UsuarioAlumno:
+            case BussinesObjectType.UsuarioAlumno:
                 TypedBO.ModelLayerType = typeof(ModelUsuarioAlumno);
                 TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), "User_Alumno");
                 break;
 
-            case BussinesObjectTypeEnum.Documento:
+            case BussinesObjectType.Documento:
                 TypedBO.ModelLayerType = typeof(ModelDocumento);
                 TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), bussinesObject.ToString());
                 break;
         }
 
         switch(ProyectName) {
-            case ProyectNameEnum.BioIntranet:
+            case ProyectName.BioIntranet:
                 DbConnection = new MySqlConnection("database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;");
                 break;
-            case ProyectNameEnum.MasterManager:
+            case ProyectName.MasterManager:
                 DbConnection = new MySqlConnection("database=qsg265; data source=localhost;user id=dbUser;password=123;persistsecurityinfo=true;sslMode=none;");
                 break;
         }

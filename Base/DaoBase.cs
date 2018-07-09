@@ -143,7 +143,6 @@ public class DaoBase
             Model.GetType().GetProperty(propertyName).SetValue(Model, fieldValue);
         }
     }
-     
     protected List<ModelDataBaseField> GetFielsDefinitionList()
     {
         QueryType = QueryTypes.SelectFieldsDefinition;
@@ -206,7 +205,6 @@ public class DaoBase
         }
         cnn.Close();
     }
-
     protected void FillDataRelationsByForeignKeys()
     {
         if (FkRelationsList != null && FkRelationsList.Count > 0) {

@@ -14,8 +14,8 @@ namespace BussinesTypedObject
       
         public enum BussinesObjectType
         {
-            UsuarioAlumno,
-            UsuarioGestor,
+            Usuario_Alumno,
+            Usuario_Gestor,
             Documento
         } 
         //public enum BOTMasterManager
@@ -56,8 +56,8 @@ namespace BussinesTypedObject
             Producto,
             Respuesta,
             Test,
-            User_Alumno,
-            User_Producto,
+            Usuario_Alumno,
+            Usuario_Producto,
             Usuario_Gestor
         }; 
         //public enum BioIntranetDataTableNames

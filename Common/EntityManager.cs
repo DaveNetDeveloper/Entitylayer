@@ -23,7 +23,7 @@ public class EntityManager
 
     #endregion
 
-    #region [ methods ]
+    #region [ methods ]F
 
     public IEntity GetEntity() {
         return (IEntity)Activator.CreateInstance(TypedBO.BussinesLayerType, args: TypedBO);
@@ -43,14 +43,14 @@ public class EntityManager
         };
 
         switch (bussinesObject) {
-            case BussinesObjectType.UsuarioAlumno:
+            case BussinesObjectType.Usuario_Alumno:
                 TypedBO.ModelLayerType = typeof(ModelUsuarioAlumno);
-                TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), "User_Alumno");
+                TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(BussinesObjectType.Usuario_Alumno.ToString()));
                 break;
 
             case BussinesObjectType.Documento:
                 TypedBO.ModelLayerType = typeof(ModelDocumento);
-                TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), bussinesObject.ToString());
+                TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(bussinesObject.ToString()));
                 break;
         }
 
@@ -64,15 +64,25 @@ public class EntityManager
         }
     }
 
+    private string TableNameTreatment(string str)
+    {
+        if (str.Length > 1)
+        {
+            var primeraMayuscula = char.ToUpper(str[0]) + str.Substring(1);
+
+            if (primeraMayuscula.Contains("_"))
+            {
+                var posGuion = primeraMayuscula.IndexOf("_");
+                var primeraParte = primeraMayuscula.Substring(0, posGuion);
+                var segundaParte = primeraMayuscula.Substring(posGuion);
+                segundaParte = char.ToUpper(segundaParte[0]) + segundaParte.Substring(1);
+                return primeraParte + segundaParte;
+            }
+            else { return primeraMayuscula; }
+        }
+        return str.ToUpper();
+    }
+
     #endregion
 
-    #region [ TODO ]
-
-    //private static string EntityName => "Entity";
-    //private static string ModelName => "Model";
-
-    // metodos privados "GetEntityName" que usen contsantes privadas "Entity" y "Model" y "Dao" para construir los
-    // nombres de las clases de negocio ui y datos que se utilizan en los switch y en la llamada a instance de reflexion 
-
-    #endregion
 }

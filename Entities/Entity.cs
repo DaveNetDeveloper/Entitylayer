@@ -6,8 +6,8 @@ public class Entity : IEntity
 {
     #region [ ctors. ]
 
-    public Entity(BussinesTypes TypedBO) {
-        DaoEntity = (IDaoEntity)Activator.CreateInstance(TypedBO.DataLayerType, args: TypedBO);
+    public Entity(BussinesTypes typedBO) {
+        DaoEntity = (IDaoEntity)Activator.CreateInstance(typedBO.DataLayerType, args: typedBO);
     }
 
     #endregion

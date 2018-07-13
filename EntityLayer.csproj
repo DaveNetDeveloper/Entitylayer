@@ -52,6 +52,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\EntityManager.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interfaces\IDaoEntity.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IModel.cs" />

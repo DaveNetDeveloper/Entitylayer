@@ -66,12 +66,10 @@ public class EntityManager
 
     private string TableNameTreatment(string str)
     {
-        if (str.Length > 1)
-        {
+        if (str.Length > 1) {
             var primeraMayuscula = char.ToUpper(str[0]) + str.Substring(1);
 
-            if (primeraMayuscula.Contains("_"))
-            {
+            if (primeraMayuscula.Contains("_")) {
                 var posGuion = primeraMayuscula.IndexOf("_");
                 var primeraParte = primeraMayuscula.Substring(0, posGuion);
                 var segundaParte = primeraMayuscula.Substring(posGuion);

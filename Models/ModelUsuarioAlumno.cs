@@ -1,6 +1,6 @@
 ﻿using System;
  
-public class ModelUsuarioAlumno : ModelBase, IModel
+public class ModelUsuarioAlumno : IModel
 {
     public ModelUsuarioAlumno() => Id = -1;
 
@@ -14,9 +14,15 @@ public class ModelUsuarioAlumno : ModelBase, IModel
     public bool Entered { get; set; }
     public bool Active { get; set; } 
     public int Phone { get; set; }
+
+    //Audit fields
+    public DateTime Updated { get; set; }
+    public DateTime Created { get; set; } 
+
+    //Bindings
     public int idusuariogestor { get; set; }
-    public int idrol { get; set; }
-     
+    public int idrol { get; set; } 
+
     public ModelRol rol { get; set; }
     public ModelUsuarioGestor usuario_gestor { get; set; }
 

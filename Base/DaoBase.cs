@@ -62,7 +62,7 @@ public class DaoBase
     protected MySqlConnection DbConnection { get; set; }
     protected List<MySqlParameter> MySqlParametersList { get; set; } 
     protected List<ModelDataBaseField> FieldsList { get; set; }
-    protected List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
+    public List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
     
     private string CurrenAssembly => Assembly.GetExecutingAssembly().GetName().Name;
     private IModel _model;
@@ -201,12 +201,15 @@ public class DaoBase
                         Referenced_ColumnName = auxDR.GetString(3)
                     });
             }
+            Model.FkRelationsList = FkRelationsList;
         }
+
         cnn.Close();
     }
     protected void FillDataRelationsByForeignKeys()
     {
         if (FkRelationsList != null && FkRelationsList.Count > 0) {
+
             foreach (ModelDataBaseFKRelation fkRelation in FkRelationsList) {
                 if (IsInForeingKeyNameList(fkRelation.ColumnName)) {
 

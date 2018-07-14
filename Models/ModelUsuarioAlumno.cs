@@ -1,5 +1,6 @@
 ﻿using System;
- 
+using System.Collections.Generic;
+
 public class ModelUsuarioAlumno : IModel
 {
     public ModelUsuarioAlumno() => Id = -1;
@@ -25,6 +26,8 @@ public class ModelUsuarioAlumno : IModel
 
     public ModelRol rol { get; set; }
     public ModelUsuarioGestor usuario_gestor { get; set; }
+
+    public List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
 
     //TODO Lista de elementos foraneo -> Tabla relaciones 1-n
     //public IEnumerable<IModel> Productos { get; set; }

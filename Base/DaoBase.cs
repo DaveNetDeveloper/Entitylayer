@@ -13,8 +13,6 @@ public class DaoBase
     private const string mySqForeingKey = "MUL";
 
     private const string modelLiteral = "Model";
-    //private const string entityLiteral = "Entity";
-    //private const string daoLiteral = "Dao";
 
     private const string ConnectionString = "database = qsg265; data source = localhost; user id = dbUser; password = 123; persistsecurityinfo = true; sslMode = none;";
     private const string Connection_biointranet = "database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;";
@@ -62,7 +60,7 @@ public class DaoBase
     protected MySqlConnection DbConnection { get; set; }
     protected List<MySqlParameter> MySqlParametersList { get; set; } 
     protected List<ModelDataBaseField> FieldsList { get; set; }
-    public List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
+    protected List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
     
     private string CurrenAssembly => Assembly.GetExecutingAssembly().GetName().Name;
     private IModel _model;

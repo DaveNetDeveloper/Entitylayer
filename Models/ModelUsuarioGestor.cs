@@ -1,4 +1,7 @@
-﻿public class ModelUsuarioGestor : ModelBase, IModel
+﻿using System;
+using System.Collections.Generic;
+
+public class ModelUsuarioGestor : IModel
 {
     public ModelUsuarioGestor() { }
 
@@ -15,7 +18,14 @@
     public int Id { get; set; }
     public string Nombre { get; set; }
     public string Apellidos { get; set; }
+    public string Email { get; set; }
     public string Login { get; set; }
     public string Password { get; set; }
-    public string Email { get; set; } 
+    
+
+    //Audit fields
+    public DateTime Updated { get; set; }
+    public DateTime Created { get; set; }
+
+    public List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
 }

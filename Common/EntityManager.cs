@@ -23,7 +23,7 @@ public class EntityManager
 
     #endregion
 
-    #region [ methods ]F
+    #region [ methods ]
 
     public IEntity GetEntity() {
         return (IEntity)Activator.CreateInstance(TypedBO.BussinesLayerType, args: TypedBO);
@@ -47,7 +47,10 @@ public class EntityManager
                 TypedBO.ModelLayerType = typeof(ModelUsuarioAlumno);
                 TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(BussinesObjectType.Usuario_Alumno.ToString()));
                 break;
-
+            case BussinesObjectType.Usuario_Gestor:
+                TypedBO.ModelLayerType = typeof(ModelUsuarioGestor);
+                TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(BussinesObjectType.Usuario_Gestor.ToString()));
+                break;
             case BussinesObjectType.Documento:
                 TypedBO.ModelLayerType = typeof(ModelDocumento);
                 TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(bussinesObject.ToString()));

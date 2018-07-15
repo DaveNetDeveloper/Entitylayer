@@ -57,6 +57,7 @@
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Base\ModelBase.cs" />
+    <Compile Include="Models\IModelRelations.cs" />
     <Compile Include="Models\Internal\ModelDataBaseFKRelation.cs" />
     <Compile Include="Models\ModelDepartamento.cs" />
     <Compile Include="Models\ModelSeccion.cs" />

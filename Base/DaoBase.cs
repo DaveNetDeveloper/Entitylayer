@@ -269,7 +269,7 @@ public class DaoBase
                 MySqlConnection cnn = null;
                 MySqlDataReader DataReader = ExecuteSelectForOutputForeingData(fkRelation, ref cnn);
                 if (!DataReader.IsClosed) {
-                    List<IModel> foreingDataList = new List<IModel>();
+                    var foreingDataList = new List<IModel>();
                     while (DataReader.Read()) {
                         string tableName = fkRelation.TableName;
                         Object ModelForeingInstance = CreateModelInstanceByName(tableName);

@@ -11,13 +11,7 @@ public class Dao : DaoBase, IDaoEntity
         InitializeData(TypedBO.ModelLayerType, TypedBO.DataTableName);
     }
 
-    #endregion
-
-    #region [ properties ]
-
-    public int NextPrimaryKey { get; set; }
-
-    #endregion
+    #endregion 
 
     #region [ methods ]
 
@@ -35,7 +29,9 @@ public class Dao : DaoBase, IDaoEntity
                     }
                 }
             }
-            FillDataRelationsByForeignKeys();
+            FillInputDataRelationsByForeignKeys();
+            
+            if (IsRelationalInterfaceImplemented) FillOutputDataRelationsByForeignKeys(); 
         }
         catch (Exception ex) {
             throw ex;
@@ -99,38 +95,35 @@ public class Dao : DaoBase, IDaoEntity
     }
     public bool ExistByPrimaryKey(int pKValue)
     {
-        try
-        {
+        try {
             AddNewParameter(PrimaryKeyName, pKValue);
             DbConnection = ExecuteDataReader(QueryTypes.ExistByPrimary);
-            if (!DrData.IsClosed)
-            {
-                while (DrData.Read())
-                {
+            if (!DrData.IsClosed) {
+                while (DrData.Read()) {
                     return DrData.GetInt32(0) > 0;
                 }
             }
             return false;
         }
-        finally
-        {
+        finally {
             DbConnection.Close();
             if (MySqlParametersList != null) MySqlParametersList.Clear();
         }
     }
-    public int GetNextPrimaryKey()
-    {
+    public int GetNextPrimaryKey() {
+        int nextPrimaryKey = 0;
         DbConnection = ExecuteDataReader(QueryTypes.SelectNextPrimaryKey);
         if (!DrData.IsClosed) {
             while (DrData.Read()) {
-                NextPrimaryKey = DrData.GetInt32(0);
+                nextPrimaryKey = DrData.GetInt32(0);
             }
         }
 
         DbConnection.Close();
-        if(MySqlParametersList != null) MySqlParametersList.Clear();
-        return NextPrimaryKey; 
-    }  
-     
+        if (MySqlParametersList != null) MySqlParametersList.Clear();
+        return nextPrimaryKey;
+    }
+ 
+
     #endregion
 }

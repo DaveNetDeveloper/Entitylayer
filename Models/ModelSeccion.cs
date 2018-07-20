@@ -1,5 +1,4 @@
-﻿ 
-public class ModelSeccion : ModelBase, IModel
+﻿ public class ModelSeccion : ModelBase, IModel
 {
     #region [ ctors. ]
 

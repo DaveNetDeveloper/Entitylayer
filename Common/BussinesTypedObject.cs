@@ -14,7 +14,7 @@ namespace BussinesTypedObject
       
         public enum BussinesObjectType
         {
-            Usuario_Alumno,
+            Alumno,
             Usuario_Gestor,
             Documento
         } 
@@ -56,7 +56,7 @@ namespace BussinesTypedObject
             Producto,
             Respuesta,
             Test,
-            Usuario_Alumno,
+            Alumno,
             Usuario_Producto,
             Usuario_Gestor
         }; 

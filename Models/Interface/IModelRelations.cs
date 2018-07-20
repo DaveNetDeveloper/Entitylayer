@@ -2,5 +2,5 @@
 
 internal interface IModelRelations
 {
-    IList<IModel> RelationalList { get; set; }
+    IList<IList<IModel>> RelationalList { get; set; }
 }

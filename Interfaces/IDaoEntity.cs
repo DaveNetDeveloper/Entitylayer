@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 
 public interface IDaoEntity
-{
-    int NextPrimaryKey { get; set; }
-
+{ 
     IModel GetByPrimaryKey(int pKValue);
     IEnumerable<IModel> GetList();
     bool RemoveByPrimaryKey(int pKValue);

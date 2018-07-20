@@ -7,5 +7,6 @@ public interface IModel
     DateTime Updated { get; set; }
     DateTime Created { get; set; }
 
-    List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
+    List<ModelDataBaseFKRelation> FkInputRelationsList { get; set; }
+    List<ModelDataBaseFKRelation> FkOutputRelationsList { get; set; }
 }

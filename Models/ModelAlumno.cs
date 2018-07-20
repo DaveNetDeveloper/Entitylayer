@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class ModelUsuarioAlumno : IModel, IModelRelations
+public class ModelAlumno : IModel, IModelRelations
 {
-    public ModelUsuarioAlumno() => Id = -1;
+    public ModelAlumno() => Id = -1;
 
     public int Id { get; set; }
     public string Name { get; set; }
@@ -27,9 +27,8 @@ public class ModelUsuarioAlumno : IModel, IModelRelations
     public ModelRol rol { get; set; }
     public ModelUsuarioGestor usuario_gestor { get; set; }
 
-    public List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
+    public List<ModelDataBaseFKRelation> FkInputRelationsList { get; set; }
+    public List<ModelDataBaseFKRelation> FkOutputRelationsList { get; set; }
 
-    //TODO: Lista de elementos foraneo -> Tabla relaciones 1-n
-    public IList<IModel> RelationalList { get; set; }
-
+    public IList<IList<IModel>> RelationalList { get; set; } 
 }

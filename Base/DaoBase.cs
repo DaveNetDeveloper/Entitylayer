@@ -4,6 +4,7 @@ using System;
 using System.Runtime.Remoting;
 using System.Reflection;
 using BussinesTypedObject;
+using System.Linq;
 
 public class DaoBase
 {
@@ -28,7 +29,8 @@ public class DaoBase
         Insert,
         DeleteByPrimary,
         SelectNextPrimaryKey,
-        SelectForeignRelationsDefinition,
+        SelectInputForeignRelationsDefinition,
+        SelectOutputForeignRelationsDefinition,
         SelectFieldsDefinition,
         ExistByPrimary,
         Custom
@@ -60,8 +62,12 @@ public class DaoBase
     protected MySqlConnection DbConnection { get; set; }
     protected List<MySqlParameter> MySqlParametersList { get; set; } 
     protected List<ModelDataBaseField> FieldsList { get; set; }
-    protected List<ModelDataBaseFKRelation> FkRelationsList { get; set; }
-    
+    protected List<ModelDataBaseFKRelation> FkInputRelationsList { get; set; }
+    protected List<ModelDataBaseFKRelation> FkOutputRelationsList { get; set; }
+    protected bool IsRelationalInterfaceImplemented => (from interfaces in ((TypeInfo)ModelClass).ImplementedInterfaces
+                                                          where interfaces.Equals(typeof(IModelRelations))
+                                                          select interfaces).First() != null;
+
     private string CurrenAssembly => Assembly.GetExecutingAssembly().GetName().Name;
     private IModel _model;
 
@@ -176,39 +182,63 @@ public class DaoBase
         } cnn.Close();
         return FieldsList;
     }
-    protected void GetForeingKeysDefinitionList()
+    protected void GetInputForeingKeysDefinitionList()
     {
-        QueryType = QueryTypes.SelectForeignRelationsDefinition;
+        QueryType = QueryTypes.SelectInputForeignRelationsDefinition;
         QuerySql = GetSqlQueryByType();
         MySqlConnection cnn = new MySqlConnection(ConnectionString);
         MySqlCommand mc = new MySqlCommand(QuerySql, cnn);
         cnn.Open();
         MySqlDataReader auxDR = mc.ExecuteReader();
 
-        if (!auxDR.IsClosed)
-        {
-            FkRelationsList = new List<ModelDataBaseFKRelation>();
-            while (auxDR.Read())
-            {
-                FkRelationsList.Add(
+        if (!auxDR.IsClosed) {
+            FkInputRelationsList = new List<ModelDataBaseFKRelation>();
+            while (auxDR.Read()) {
+                FkInputRelationsList.Add(
                     new ModelDataBaseFKRelation()
                     {
                         ColumnName = auxDR.GetString(0),
                         ConstraintName = auxDR.GetString(1),
-                        Referenced_TableName = auxDR.GetString(2),
-                        Referenced_ColumnName = auxDR.GetString(3)
+                        ReferencedTableName = auxDR.GetString(2),
+                        ReferencedColumnName = auxDR.GetString(3)
                     });
             }
-            Model.FkRelationsList = FkRelationsList;
+            Model.FkInputRelationsList = FkInputRelationsList;
         }
 
         cnn.Close();
     }
-    protected void FillDataRelationsByForeignKeys()
+    protected void GetOutputForeingKeysDefinitionList()
     {
-        if (FkRelationsList != null && FkRelationsList.Count > 0) {
+        QueryType = QueryTypes.SelectOutputForeignRelationsDefinition;
+        QuerySql = GetSqlQueryByType();
+        MySqlConnection cnn = new MySqlConnection(ConnectionString);
+        MySqlCommand mc = new MySqlCommand(QuerySql, cnn);
+        cnn.Open();
+        MySqlDataReader auxDR = mc.ExecuteReader();
 
-            foreach (ModelDataBaseFKRelation fkRelation in FkRelationsList) {
+        if (!auxDR.IsClosed) {
+            FkOutputRelationsList = new List<ModelDataBaseFKRelation>();
+            while (auxDR.Read()) {
+                FkOutputRelationsList.Add(
+                    new ModelDataBaseFKRelation() {
+                        TableName = auxDR.GetString(0),
+                        ColumnName = auxDR.GetString(1),
+                        ConstraintName = auxDR.GetString(2),
+                        ReferencedTableName = auxDR.GetString(3),
+                        ReferencedColumnName = auxDR.GetString(4)
+                    });
+            }
+            Model.FkOutputRelationsList = FkOutputRelationsList;
+        }
+
+        cnn.Close();
+    }
+    protected void FillInputDataRelationsByForeignKeys()
+    {
+        if (FkInputRelationsList != null && FkInputRelationsList.Count > 0) {
+
+            foreach (ModelDataBaseFKRelation fkRelation in FkInputRelationsList) {
                 if (IsInForeingKeyNameList(fkRelation.ColumnName)) {
 
                     MySqlConnection cnn = null;
@@ -216,7 +246,7 @@ public class DaoBase
                     if (!DataReader.IsClosed) {
                         while (DataReader.Read()) {
 
-                            string ReferencedTableName = fkRelation.Referenced_TableName;
+                            string ReferencedTableName = fkRelation.ReferencedTableName;
                             Object ModelForeingInstance = CreateModelInstanceByName(ReferencedTableName);
 
                             for (int fieldIndex = 0; fieldIndex < DataReader.FieldCount; fieldIndex++) {
@@ -232,13 +262,40 @@ public class DaoBase
             }
         }
     }
+    protected void FillOutputDataRelationsByForeignKeys()
+    {
+        if (FkOutputRelationsList != null && FkOutputRelationsList.Count > 0) {
+            foreach (ModelDataBaseFKRelation fkRelation in FkOutputRelationsList) {
+                MySqlConnection cnn = null;
+                MySqlDataReader DataReader = ExecuteSelectForOutputForeingData(fkRelation, ref cnn);
+                if (!DataReader.IsClosed) {
+                    List<IModel> foreingDataList = new List<IModel>();
+                    while (DataReader.Read()) {
+                        string tableName = fkRelation.TableName;
+                        Object ModelForeingInstance = CreateModelInstanceByName(tableName);
+                        for (int fieldIndex = 0; fieldIndex < DataReader.FieldCount; fieldIndex++) {
+                            var fieldValue = DataReader.GetValue(fieldIndex);
+                            var propertyName = ModelForeingInstance.GetType().GetProperties()[fieldIndex].Name;
+                            ModelForeingInstance.GetType().GetProperty(propertyName).SetValue(ModelForeingInstance, fieldValue);
+                        }
+                        foreingDataList.Add((IModel)ModelForeingInstance);
+                    }
+                    var relationalList = new List<IList<IModel>>();
+                    relationalList.Add(foreingDataList);
+                    Model.GetType().GetProperty("RelationalList").SetValue(Model, relationalList);
+                }
+                cnn.Close();
+            }
+        } 
+    }
     protected void InitializeData(Type modelClass, BussinesTypes.DataTableNames dataTableName)
     {
         ModelClass = modelClass;
         TableName = dataTableName;
         //DbConnection = connectionString;
         GetFielsDefinitionList();
-        GetForeingKeysDefinitionList();
+        GetInputForeingKeysDefinitionList();
+        if (IsRelationalInterfaceImplemented) GetOutputForeingKeysDefinitionList();
     }
 
     private Object CreateModelInstanceByName(string name)
@@ -250,7 +307,16 @@ public class DaoBase
     private MySqlDataReader ExecuteSelectForForeingData(ModelDataBaseFKRelation fkRelation, ref MySqlConnection cnn)
     {
         var modelFkValue = Model.GetType().GetProperty(fkRelation.ColumnName).GetValue(Model);
-        var sqlQuery = $"SELECT * FROM {fkRelation.Referenced_TableName} WHERE {fkRelation.Referenced_ColumnName} = {modelFkValue}";
+        var sqlQuery = $"SELECT * FROM {fkRelation.ReferencedTableName} WHERE {fkRelation.ReferencedColumnName} = {modelFkValue}";
+        cnn = new MySqlConnection(ConnectionString);
+        MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
+        cnn.Open();
+        return mc.ExecuteReader();
+    }
+    private MySqlDataReader ExecuteSelectForOutputForeingData(ModelDataBaseFKRelation fkRelation, ref MySqlConnection cnn)
+    {
+        var modelPKValue = Model.GetType().GetProperty(TableNameTreatment(fkRelation.ReferencedColumnName)).GetValue(Model);
+        var sqlQuery = $"SELECT * FROM {fkRelation.TableName} WHERE {fkRelation.ColumnName} = {modelPKValue}";
         cnn = new MySqlConnection(ConnectionString);
         MySqlCommand mc = new MySqlCommand(sqlQuery, cnn);
         cnn.Open();
@@ -333,8 +399,11 @@ public class DaoBase
             case QueryTypes.SelectNextPrimaryKey:
                 QuerySql = $" SELECT MAX({PrimaryKeyName}) + 1 FROM @TableName ";
                 break;
-            case QueryTypes.SelectForeignRelationsDefinition:
+            case QueryTypes.SelectInputForeignRelationsDefinition:
                 QuerySql = $"SELECT COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{TableName}' AND CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_COLUMN_NAME IS NOT NULL AND REFERENCED_TABLE_NAME IS NOT NULL";
+                break;
+            case QueryTypes.SelectOutputForeignRelationsDefinition:
+                QuerySql = $" SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_COLUMN_NAME IS NOT NULL AND REFERENCED_TABLE_NAME IS NOT NULL AND REFERENCED_TABLE_NAME = '{TableName}'";
                 break;
             case QueryTypes.SelectFieldsDefinition:
                 QuerySql = $"SELECT Data_Type, Column_Name, Ordinal_Position, Is_Nullable, Character_Maximum_Length, Column_Key FROM information_schema.columns WHERE TABLE_NAME = '{TableName}'";

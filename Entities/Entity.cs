@@ -17,10 +17,14 @@ public class Entity : IEntity
     public IDaoEntity DaoEntity { get; set; }
 
     #endregion
-     
+
     #region [ methods ]
 
-    public IModel GetByPrimaryKey(int pKValue) => DaoEntity.GetByPrimaryKey(pKValue);
+    public IModel GetByPrimaryKey(int pKValue)
+    {
+        return DaoEntity.GetByPrimaryKey(pKValue);
+    }
+
     public IEnumerable<IModel> GetList() => DaoEntity.GetList();
     public bool RemoveByPrimaryKey(int pKValue) => DaoEntity.RemoveByPrimaryKey(pKValue);
     public bool Insert(IModel model)

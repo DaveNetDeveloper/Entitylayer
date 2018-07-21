@@ -30,5 +30,5 @@ public class ModelAlumno : IModel, IModelRelations
     public List<ModelDataBaseFKRelation> FkInputRelationsList { get; set; }
     public List<ModelDataBaseFKRelation> FkOutputRelationsList { get; set; }
 
-    public IList<IList<IModel>> RelationalList { get; set; } 
+    public List<IList<IModel>> RelationalEntityList { get; set; } 
 }

@@ -282,7 +282,7 @@ public class DaoBase
                     }
                     var relationalList = new List<IList<IModel>>();
                     relationalList.Add(foreingDataList);
-                    Model.GetType().GetProperty("RelationalList").SetValue(Model, relationalList);
+                    Model.GetType().GetProperty("RelationalEntityList").SetValue(Model, relationalList);
                 }
                 cnn.Close();
             }

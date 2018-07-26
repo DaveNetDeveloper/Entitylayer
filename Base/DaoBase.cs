@@ -200,7 +200,8 @@ public class DaoBase
                         ColumnName = auxDR.GetString(0),
                         ConstraintName = auxDR.GetString(1),
                         ReferencedTableName = auxDR.GetString(2),
-                        ReferencedColumnName = auxDR.GetString(3)
+                        ReferencedColumnName = auxDR.GetString(3),
+                        TableName = auxDR.GetString(4)
                     });
             }
             Model.FkInputRelationsList = FkInputRelationsList;
@@ -271,6 +272,7 @@ public class DaoBase
                 if (!DataReader.IsClosed) {
                     var foreingDataList = new List<IModel>();
                     while (DataReader.Read()) {
+
                         string tableName = fkRelation.TableName;
                         Object ModelForeingInstance = CreateModelInstanceByName(tableName);
                         for (int fieldIndex = 0; fieldIndex < DataReader.FieldCount; fieldIndex++) {
@@ -298,12 +300,6 @@ public class DaoBase
         if (IsRelationalInterfaceImplemented) GetOutputForeingKeysDefinitionList();
     }
 
-    private Object CreateModelInstanceByName(string name)
-    {
-        var modelTypeOfForeingTableName = $"{modelLiteral}{TableNameTreatment(name)}";
-        ObjectHandle handle = Activator.CreateInstance(CurrenAssembly, modelTypeOfForeingTableName);
-        return handle.Unwrap();
-    }
     private MySqlDataReader ExecuteSelectForForeingData(ModelDataBaseFKRelation fkRelation, ref MySqlConnection cnn)
     {
         var modelFkValue = Model.GetType().GetProperty(fkRelation.ColumnName).GetValue(Model);
@@ -400,7 +396,7 @@ public class DaoBase
                 QuerySql = $" SELECT MAX({PrimaryKeyName}) + 1 FROM @TableName ";
                 break;
             case QueryTypes.SelectInputForeignRelationsDefinition:
-                QuerySql = $"SELECT COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{TableName}' AND CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_COLUMN_NAME IS NOT NULL AND REFERENCED_TABLE_NAME IS NOT NULL";
+                QuerySql = $"SELECT COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME, TABLE_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{TableName}' AND CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_COLUMN_NAME IS NOT NULL AND REFERENCED_TABLE_NAME IS NOT NULL";
                 break;
             case QueryTypes.SelectOutputForeignRelationsDefinition:
                 QuerySql = $" SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_NAME != 'PRIMARY' AND REFERENCED_COLUMN_NAME IS NOT NULL AND REFERENCED_TABLE_NAME IS NOT NULL AND REFERENCED_TABLE_NAME = '{TableName}'";
@@ -435,6 +431,12 @@ public class DaoBase
             return propertyTypeName.Substring(0, "Model".Length).Equals("Model");
         }
         return false;
+    }
+    private Object CreateModelInstanceByName(string name)
+    {
+        var modelTypeOfForeingTableName = modelLiteral + TableNameTreatment(name);
+        ObjectHandle handle = Activator.CreateInstance(CurrenAssembly, modelTypeOfForeingTableName);
+        return handle.Unwrap();
     }
 
     #endregion

@@ -21,11 +21,13 @@ public class ModelAlumno : IModel, IModelRelations
     public DateTime Created { get; set; } 
 
     //Bindings
-    public int idusuariogestor { get; set; }
-    public int idrol { get; set; } 
+    public int idusuario { get; set; }
+    public int idrol { get; set; }
+    public int idpais { get; set; }
 
     public ModelRol rol { get; set; }
-    public ModelUsuarioGestor usuario_gestor { get; set; }
+    public ModelUsuario usuario { get; set; }
+    public ModelPais pais { get; set; }
 
     public List<ModelDataBaseFKRelation> FkInputRelationsList { get; set; }
     public List<ModelDataBaseFKRelation> FkOutputRelationsList { get; set; }

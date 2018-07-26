@@ -2,13 +2,13 @@
 using MySql.Data.MySqlClient; 
 using BussinesTypedObject;
 using static BussinesTypedObject.BussinesTypes;
+using System.Collections.Generic;
 
 public class EntityManager
 {
     #region [ ctors. ]
 
     public EntityManager(ProyectName ProyectName) {
-         
     }
     public EntityManager(BussinesObjectType bussinesObject, ProyectName ProyectName) {
         InitializeTypes(bussinesObject, ProyectName);
@@ -48,7 +48,7 @@ public class EntityManager
                 TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(BussinesObjectType.Alumno.ToString()));
                 break;
             case BussinesObjectType.Usuario_Gestor:
-                TypedBO.ModelLayerType = typeof(ModelUsuarioGestor);
+                TypedBO.ModelLayerType = typeof(ModelUsuario);
                 TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(BussinesObjectType.Usuario_Gestor.ToString()));
                 break;
             //case BussinesObjectType.Documento:
@@ -66,6 +66,36 @@ public class EntityManager
                 break;
         }
     }
+    public IList<Type> GetModelTypesFromRelationalEntityList(IModelRelations pModel)
+    {
+        var typeList = new List<Type>();
+        if (pModel.RelationalEntityList != null && pModel.RelationalEntityList.Count > 0) {
+            foreach (List<IModel> modelList in pModel.RelationalEntityList) //recorro la lista de listas de modelos
+            {
+                if(modelList != null && modelList.Count > 0) {
+                    foreach (IModel model in modelList) { //recorro la lista de modelos
+                        Type type = null;
+                        if (model != null) {
+                            type = model.GetType();
+                        }
+                        typeList.Add(type);
+                    }
+                }
+            }
+        }
+        return typeList;
+    }
+    public bool HasEntityRelations(IModelRelations pModel)
+    {
+        if (pModel.RelationalEntityList != null && pModel.RelationalEntityList.Count > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    #endregion
+
+    #region [ privates ]
 
     private string TableNameTreatment(string str)
     {
@@ -85,5 +115,4 @@ public class EntityManager
     }
 
     #endregion
-
 }

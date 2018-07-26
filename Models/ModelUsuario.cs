@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class ModelUsuarioGestor : IModel
+public class ModelUsuario : IModel
 {
-    public ModelUsuarioGestor() { }
+    public ModelUsuario() { }
 
-    public ModelUsuarioGestor(int pId, string pNombre, string pLogin, string pPassword, string pApellidos, string pEmail)
+    public ModelUsuario(int pId, string pNombre, string pLogin, string pPassword, string pApellidos, string pEmail)
     {
         Id = pId;
         Nombre = pNombre;

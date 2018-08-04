@@ -51,10 +51,10 @@ public class EntityManager
                 TypedBO.ModelLayerType = typeof(ModelUsuario);
                 TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(BussinesObjectType.Usuario_Gestor.ToString()));
                 break;
-            //case BussinesObjectType.Documento:
-            //    TypedBO.ModelLayerType = typeof(ModelDocumento);
-            //    TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(bussinesObject.ToString()));
-            //    break;
+            case BussinesObjectType.Documento:
+                TypedBO.ModelLayerType = typeof(ModelDocumento);
+                TypedBO.DataTableName = (DataTableNames)Enum.Parse(typeof(DataTableNames), TableNameTreatment(BussinesObjectType.Documento.ToString()));
+                break;
         }
 
         switch(ProyectName) {

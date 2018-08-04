@@ -64,9 +64,19 @@ public class DaoBase
     protected List<ModelDataBaseField> FieldsList { get; set; }
     protected List<ModelDataBaseFKRelation> FkInputRelationsList { get; set; }
     protected List<ModelDataBaseFKRelation> FkOutputRelationsList { get; set; }
-    protected bool IsRelationalInterfaceImplemented => (from interfaces in ((TypeInfo)ModelClass).ImplementedInterfaces
-                                                          where interfaces.Equals(typeof(IModelRelations))
-                                                          select interfaces).First() != null;
+    protected bool IsRelationalInterfaceImplemented
+    {
+        get {
+            if (null != ((TypeInfo)ModelClass) && null != ((TypeInfo)ModelClass).ImplementedInterfaces && ((TypeInfo)ModelClass).ImplementedInterfaces.Count() > 0) {
+                var hasInterefaces = false;
+                var auxInterefaces =  (from interfaces in ((TypeInfo)ModelClass).ImplementedInterfaces
+                        where interfaces.Equals(typeof(IModelRelations))
+                        select interfaces)?.FirstOrDefault();
+                if (auxInterefaces != null) hasInterefaces = true;
+                return hasInterefaces;
+            } else { return false; }
+        }
+    }
 
     private string CurrenAssembly => Assembly.GetExecutingAssembly().GetName().Name;
     private IModel _model;
@@ -335,7 +345,7 @@ public class DaoBase
     private void InitializeConnection()
     {
         //DbConnection = new MySqlConnection(Connection_biointranet);
-        DbConnection = new MySqlConnection(ConnectionString);
+        DbConnection = new MySqlConnection(Connection_biointranet);
         Command = new MySqlCommand { Connection = DbConnection };
         Command.CommandText = GetSqlQueryByType().Replace("@TableName", TableName.ToString());
         AddParametersToCommand();

@@ -56,7 +56,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interfaces\IDaoEntity.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
-    <Compile Include="Interfaces\IBasicModel.cs" />
     <Compile Include="Interfaces\IModel.cs" />
     <Compile Include="Base\ModelBase.cs" />
     <Compile Include="Models\Interface\IModelRelations.cs" />

@@ -123,39 +123,30 @@ public class DaoBase
     }
     protected void SetTypedFieldValueIntoModel(int fieldIndex, Type fieldType)
     {
-        Object fieldValue;
+        Object fieldValue = null; 
         switch (fieldType.Name) {
             case "String":
                 fieldValue = DrData.GetString(fieldIndex);
-                break; 
+                break;
             case "DateTime":
+            case "Date":
                 fieldValue = DrData.GetDateTime(fieldIndex);
                 break;
             case "Boolean":
                 fieldValue = DrData.GetBoolean(fieldIndex);
                 break;
             case "Int32":
+            case "Int64":
                 fieldValue = DrData.GetInt32(fieldIndex);
                 break;
             case "Decimal":
                 fieldValue = DrData.GetDecimal(fieldIndex);
                 break;
-            default:
-                fieldValue = null;
-                break; 
         }
 
-        if(fieldType.Equals(typeof(Int32)) && ModelClass.GetProperties()[fieldIndex].PropertyType.Equals(typeof(Boolean))) {
-            fieldValue = fieldValue.Equals(1) ? true : false;
-        }
-
-        var propertyName = ModelClass.GetProperties()[fieldIndex].Name;
-        var propertyTypeName = ModelClass.GetProperties()[fieldIndex].PropertyType.Name;
-
-        if (!StartsByModel(propertyTypeName)){
-            Model.GetType().GetProperty(propertyName).SetValue(Model, fieldValue);
-        }
-    }
+        SetValueWhenPropertyIsBoolean(ref fieldValue, fieldIndex, fieldType); //Special case for db integer value for boolean properties into Model
+        SetValueToModelProperty(fieldValue, fieldIndex);   
+    } 
     protected List<ModelDataBaseField> GetFielsDefinitionList()
     {
         QueryType = QueryTypes.SelectFieldsDefinition;
@@ -435,10 +426,10 @@ public class DaoBase
         }
         return str.ToUpper();
     }
-    private bool StartsByModel(string propertyTypeName)
+    private bool StartNameOfModelPoropertyTypeByModel(string modelPropertyTypeName)
     {
-        if (propertyTypeName.Contains("Model")) {
-            return propertyTypeName.Substring(0, "Model".Length).Equals("Model");
+        if (modelPropertyTypeName.Contains(modelLiteral)) {
+            return modelPropertyTypeName.Substring(0, modelLiteral.Length).Equals(modelLiteral);
         }
         return false;
     }
@@ -447,6 +438,22 @@ public class DaoBase
         var modelTypeOfForeingTableName = modelLiteral + TableNameTreatment(name);
         ObjectHandle handle = Activator.CreateInstance(CurrenAssembly, modelTypeOfForeingTableName);
         return handle.Unwrap();
+    }
+    private void SetValueToModelProperty(object fieldValue, int fieldIndex)
+    {
+        var modelPropertyTypeName = ModelClass.GetProperties()[fieldIndex].PropertyType.Name;
+        if (!StartNameOfModelPoropertyTypeByModel(modelPropertyTypeName))
+        {
+            var modelPropertyName = ModelClass.GetProperties()[fieldIndex].Name;
+            Model.GetType().GetProperty(modelPropertyName).SetValue(Model, fieldValue);
+        }
+    }
+    private void SetValueWhenPropertyIsBoolean(ref object fieldValue, int fieldIndex, Type fieldType)
+    {
+        if (fieldType.Equals(typeof(Int32)) && ModelClass.GetProperties()[fieldIndex].PropertyType.Equals(typeof(Boolean)))
+        {
+            fieldValue = fieldValue.Equals(1) ? true : false;
+        }
     }
 
     #endregion

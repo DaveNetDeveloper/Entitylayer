@@ -19,8 +19,7 @@ public class Dao : DaoBase, IDaoEntity
     {
         try {
             AddNewParameter(PrimaryKeyName, pKValue);
-            DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary);
-
+            DbConnection = ExecuteDataReader(QueryTypes.SelectByPrimary); 
             if (!DrData.IsClosed) {
                 while (DrData.Read()) {
                     for (int fieldIndex = 0; fieldIndex < DrData.FieldCount; fieldIndex++) {
@@ -28,9 +27,8 @@ public class Dao : DaoBase, IDaoEntity
                         SetTypedFieldValueIntoModel(fieldIndex, fieldType);
                     }
                 }
-            }
+            } 
             FillInputDataRelationsByForeignKeys();
-            
             if (IsRelationalInterfaceImplemented) FillOutputDataRelationsByForeignKeys(); 
         }
         catch (Exception ex) {
@@ -123,7 +121,6 @@ public class Dao : DaoBase, IDaoEntity
         if (MySqlParametersList != null) MySqlParametersList.Clear();
         return nextPrimaryKey;
     }
- 
-
+  
     #endregion
 }

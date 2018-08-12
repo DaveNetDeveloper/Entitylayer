@@ -96,6 +96,7 @@
     <Content Include="DataBaseScripts\BackUp_20180609.sql" />
     <Content Include="DataBaseScripts\BackUp_20180626.sql" />
     <Content Include="DataBaseScripts\BackUp_20180726.sql" />
+    <Content Include="DataBaseScripts\BackUp_20180812.sql" />
     <Content Include="DataBaseScripts\Backup_biointranet_22042018.sql" />
     <Content Include="DataBaseScripts\Backup_qsg265__22042018.sql" />
   </ItemGroup>

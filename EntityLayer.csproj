@@ -61,6 +61,7 @@
     <Compile Include="Models\Interface\IModelRelations.cs" />
     <Compile Include="Models\Internal\ModelDataBaseFKRelation.cs" />
     <Compile Include="Models\ModelApartado.cs" />
+    <Compile Include="Models\ModelIdioma.cs" />
     <Compile Include="Models\ModelPais.cs" />
     <Compile Include="Models\ModelArea.cs" />
     <Compile Include="Models\ModelCategoria.cs" />

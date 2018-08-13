@@ -8,7 +8,7 @@ public class Dao : DaoBase, IDaoEntity
     #region [ ctors. ]
 
     public Dao(BussinesTypes TypedBO) {
-        InitializeData(TypedBO.ModelLayerType, TypedBO.DataTableName);
+        InitializeDataTypes(TypedBO.ModelLayerType, TypedBO.DataTableName);
     }
 
     #endregion 
@@ -48,7 +48,7 @@ public class Dao : DaoBase, IDaoEntity
 
             ModelList = new List<IModel>();
             while (DrData.Read()) {
-                Model = (IModel)Activator.CreateInstance(ModelClass);
+                Model = ModelManager.CreateModelInstanceByType(ModelClass);
                 for (int fieldIndex = 0; fieldIndex < DrData.FieldCount; fieldIndex++) {
                     var fieldType = DrData.GetFieldType(fieldIndex);
                     SetTypedFieldValueIntoModel(fieldIndex, fieldType); 

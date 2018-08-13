@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class ModelUsuario : IModel
 {
     public ModelUsuario() { }
-
     public ModelUsuario(int pId, string pNombre, string pLogin, string pPassword, string pApellidos, string pEmail)
     {
         Id = pId;
@@ -21,7 +20,9 @@ public class ModelUsuario : IModel
     public string Email { get; set; }
     public string Login { get; set; }
     public string Password { get; set; }
-    
+
+    //Bindings
+    public int ididioma { get; set; }
 
     //Audit fields
     public DateTime Updated { get; set; }

@@ -8,7 +8,7 @@ public class ModelAlumnoProducto : IModel
     public int Id { get; set; }
 
     public int IdAlumno { get; set; }
-    public int IdProdcuto { get; set; }
+    public int IdProducto { get; set; }
 
     public ModelAlumno Alumno { get; set; }
     public ModelProducto Producto { get; set; }

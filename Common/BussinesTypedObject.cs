@@ -1,4 +1,5 @@
-﻿using System; 
+﻿using MySql.Data.MySqlClient;
+using System; 
 
 namespace BussinesTypedObject
 { 
@@ -99,7 +100,7 @@ namespace BussinesTypedObject
         public Type DataLayerType;
         public Type ModelLayerType;
         public DataTableNames DataTableName;
-
+        public MySqlConnection DbConnection;
         #endregion
     }
 }

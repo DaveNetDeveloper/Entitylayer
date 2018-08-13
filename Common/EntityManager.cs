@@ -19,7 +19,6 @@ public class EntityManager
     #region [ properties ]
 
     public BussinesTypes TypedBO;
-    public MySqlConnection DbConnection;
 
     #endregion
 
@@ -59,10 +58,10 @@ public class EntityManager
 
         switch(ProyectName) {
             case ProyectName.BioIntranet:
-                DbConnection = new MySqlConnection("database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;");
+                TypedBO.DbConnection = new MySqlConnection("database=biointranet; data source=localhost; user id=dbUser; password=123; persistsecurityinfo=true; sslMode=none;");
                 break;
             case ProyectName.MasterManager:
-                DbConnection = new MySqlConnection("database=qsg265; data source=localhost;user id=dbUser;password=123;persistsecurityinfo=true;sslMode=none;");
+                TypedBO.DbConnection = new MySqlConnection("database=qsg265; data source=localhost;user id=dbUser;password=123;persistsecurityinfo=true;sslMode=none;");
                 break;
         }
     }

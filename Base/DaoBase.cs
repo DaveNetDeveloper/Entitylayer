@@ -298,11 +298,11 @@ public class DaoBase
             }
         } 
     }
-    protected void InitializeDataTypes(Type modelClass, BussinesTypes.DataTableNames dataTableName)
+    protected void InitializeDataTypes(Type modelClass, BussinesTypes.DataTableNames dataTableName, MySqlConnection connectionString)
     {
         ModelClass = modelClass;
         TableName = dataTableName;
-        //DbConnection = connectionString;
+        DbConnection = connectionString;
         GetFielsDefinitionList();
         GetInputForeingKeysDefinitionList();
         if (IsRelationalInterfaceImplemented) GetOutputForeingKeysDefinitionList();
@@ -342,7 +342,7 @@ public class DaoBase
     }
     private void InitializeConnection()
     {
-        DbConnection = new MySqlConnection(Connection_biointranet);
+        //DbConnection = new MySqlConnection(Connection_biointranet);
         //DbConnection = new MySqlConnection(ConnectionString);
         Command = new MySqlCommand { Connection = DbConnection };
         Command.CommandText = GetSqlQueryByType().Replace("@TableName", TableName.ToString());

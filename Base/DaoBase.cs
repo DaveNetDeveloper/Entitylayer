@@ -298,11 +298,12 @@ public class DaoBase
             }
         } 
     }
-    protected void InitializeDataTypes(Type modelClass, BussinesTypes.DataTableNames dataTableName, MySqlConnection connectionString)
+    protected void InitializeDataTypes(BussinesTypes typedBO)
     {
-        ModelClass = modelClass;
-        TableName = dataTableName;
-        DbConnection = connectionString;
+        ModelClass = typedBO.ModelLayerType;
+        TableName = typedBO.DataTableName;
+        DbConnection = typedBO.DbConnection;
+
         GetFielsDefinitionList();
         GetInputForeingKeysDefinitionList();
         if (IsRelationalInterfaceImplemented) GetOutputForeingKeysDefinitionList();
@@ -342,8 +343,6 @@ public class DaoBase
     }
     private void InitializeConnection()
     {
-        //DbConnection = new MySqlConnection(Connection_biointranet);
-        //DbConnection = new MySqlConnection(ConnectionString);
         Command = new MySqlCommand { Connection = DbConnection };
         Command.CommandText = GetSqlQueryByType().Replace("@TableName", TableName.ToString());
         AddParametersToCommand();
@@ -437,20 +436,6 @@ public class DaoBase
     {
         return Model.GetType().GetProperty(propertyName);
     }
-
-    //private bool StartNameOfModelPropertyTypeByModel(string modelPropertyTypeName)
-    //{
-    //    if (modelPropertyTypeName.Contains(modelLiteral)) {
-    //        return modelPropertyTypeName.Substring(0, modelLiteral.Length).Equals(modelLiteral);
-    //    }
-    //    return false;
-    //}
-    //private Object CreateModelInstanceByName(string name)
-    //{
-    //    var modelTypeOfForeingTableName = modelLiteral + TableNameTreatment(name);
-    //    ObjectHandle handle = Activator.CreateInstance(CurrenAssembly, modelTypeOfForeingTableName);
-    //    return handle.Unwrap();
-    //}
     private void SetValueToModelProperty(object fieldValue, int fieldIndex)
     {
         var modelPropertyTypeName = GetModelProperties[fieldIndex].PropertyType.Name;

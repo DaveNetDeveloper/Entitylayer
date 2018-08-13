@@ -7,8 +7,8 @@ public class Dao : DaoBase, IDaoEntity
 {
     #region [ ctors. ]
 
-    public Dao(BussinesTypes TypedBO) {
-        InitializeDataTypes(TypedBO.ModelLayerType, TypedBO.DataTableName, TypedBO.DbConnection);
+    public Dao(BussinesTypes typedBO) {
+        InitializeDataTypes(typedBO);
     }
 
     #endregion 
